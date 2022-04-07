@@ -30,8 +30,12 @@ public class Main {
      */
     //headers and listing formats
     private static final String HEADER_HELP_COMMAND = "Available commands:";
-    private static final String LIST_STUDENT = "[%d] %s (%d)\n";
-    private static final String LIST_PROFESSOR = "%s (%d)\n";
+    private static final String HEADER_PROFESSORS = "Professors:";
+    private static final String HEADER_STUDENTS = "Students:";
+    private static final String LIST_STUDENT_FORMAT = "[%d] %s (%d)\n";
+    private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
+    private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests, %d deadlines.\n";
+    private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
     //help commands
     private static final String HELP_COMMAND_PEOPLE = "lists all people";
     private static final String HELP_COMMAND_PROFESSOR =  "adds a new professor";
@@ -56,8 +60,14 @@ public class Main {
     private static final String ERROR_EMPTY_DATABASE = "No people registered!";
     private static final String ERROR_ALREADY_EXIST_PERSON = "%s already exists!\n";
     private static final String ERROR_NUMBER_TAKEN = "There is already a student with the number %d!\n";
+    private static final String ERROR_NO_COURSES = "No courses registed!";
+    private static final String ERROR_COURSE_EXISTS = "Course %s already exists!\n";
+    private static final String ERROR_COURSE_NOT_EXIST = "Course %s does not exist!\n";
+    private static final String ERROR_PROFESSOR_NOT_EXIST = "Professor %s does not exist!";
+    private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %d!";
 
-    private static final String PERSON_ADDED = "%s added.\n";
+    private static final String PERSON_OR_COURSE_ADDED = "%s added.\n";
+    private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
 
     public static void main(String[] args) {
     }
