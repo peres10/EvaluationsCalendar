@@ -2,28 +2,7 @@
 import java.util.*;
 
 public class Main {
-    /**
-     * Comandos do utilizador.
-     */
-    /*private static final String EXIT = "exit";
-    private static final String HELP = "help";
-    private static final String LIST_PEOPLE = "people";
-    private static final String ADD_PROFESSOR = "professor";
-    private static final String ADD_STUDENT = "student";
-    private static final String LIST_COURSES = "courses";
-    private static final String ADD_COURSE = "course";
-    private static final String LIST_ROSTER = "roster";
-    private static final String ASSIGN_PROF = "assign";
-    private static final String ENROL_STUD = "enrol";
-    private static final String INTERSECT = "intersection";
-    private static final String LIST_COURSE_DEADLINES = "coursedeadlines";
-    private static final String LIST_PERSONAL_DEADLINES = "personaldeadlines";
-    private static final String ADD_DEADLINE = "deadline";
-    private static final String LIST_COURSE_TESTS = "coursetests";
-    private static final String LIST_PERSONAL_TESTS = "personaltests";
-    private static final String SCHEDULE_TEST = "schedule";
-    private static final String PROF_WITH_MORE_STUDS = "superprofessor";
-    private static final String LIST_MOST_STRESSED_STUDENT = "stressometer";*/
+    
 
     /**
      * Feedback dado pelo programa.
@@ -36,26 +15,9 @@ public class Main {
     private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
     private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests, %d deadlines.\n";
     private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
-    //help commands
-    /*private static final String HELP_COMMAND_PEOPLE = "lists all people";
-    private static final String HELP_COMMAND_PROFESSOR =  "adds a new professor";
-    private static final String HELP_COMMAND_STUDENT = "adds a new student";
-    private static final String HELP_COMMAND_COURSES = "lists all courses";
-    private static final String HELP_COMMAND_COURSE = "adds a new course";
-    private static final String HELP_COMMAND_ROSTER = "lists the professors and students of a course";
-    private static final String HELP_COMMAND_ASSIGN = "adds a teacher to a course";
-    private static final String HELP_COMMAND_ENROL = "adds students to a course";
-    private static final String HELP_COMMAND_INTERSECTION = "lists all the people involved in all the given courses";
-    private static final String HELP_COMMAND_COURSEDEADLINES = "lists all deadlines in a given course";
-    private static final String HELP_COMMAND_PERSONALDEADLINES = "lists all the deadlines of a given person";
-    private static final String HELP_COMMAND_DEADLINE = "adds a new deadline";
-    private static final String HELP_COMMAND_COURSETESTS =  "lists all tests in a given course";
-    private static final String HELP_COMMAND_PERSONALTESTS = "lists all tests for a given student";
-    private static final String HELP_COMMAND_SCHEDULE = "add a new test to a course";
-    private static final String HELP_COMMAND_SUPERPROFESSOR = "presents the professor with more students";
-    private static final String HELP_COMMAND_STRESSOMETER = "presents the students with the top N stressful sequences of evaluations";
-    private static final String HELP_COMMAND_HELP = "shows the available commands";
-    private static final String HELP_COMMAND_EXIT = "terminates the execution of the program";*/
+    // private static final String LIST_DEADLINE = ?
+    // private static final String LIST_PERSONAL_DEADLINES = ?
+    
     //error and success messages
     private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands\n";
     private static final String ERROR_EMPTY_DATABASE = "No people registered!";
@@ -66,17 +28,21 @@ public class Main {
     private static final String ERROR_COURSE_NOT_EXIST = "Course %s does not exist!\n";
     private static final String ERROR_PROFESSOR_NOT_EXIST = "Professor %s does not exist!";
     private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %d!";
-
+    private static final String ERROR_INADEQUATE_NUM_STUDENTS = "Inadequate number of students!";
+    private static final String ERROR_STUDENT_ALREADY_ENROLLED = "Student %s is already enrolled in course %s!\n";
+    private static final String ERROR_NO_PROFS_TO_LIST = "No professors or students to list!";
+    private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s";
+    
     private static final String PERSON_OR_COURSE_ADDED = "%s added.\n";
     private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
+    private static final String STUDENTS_ADDED_TO_COURSE = "%d students added to course %s.";
+
+    
     private static final String EXIT_MSG = "Bye!";
+    
 
     private enum Command{
-    	PEOPLE("lists all people"),
-    	PROFESSOR("adds a new professor"),
-    	STUDENT("adds a new student"),
-    	COURSES("lists all courses"),
-    	COURSE("adds a new course"),
+
     	ROSTER("adds a new course"),
     	ASSIGN("lists the professors and students of a course"),
     	ENROL("adds students to a course"),
