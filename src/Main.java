@@ -42,9 +42,14 @@ public class Main {
     
 
     private enum Command{
-
-    	ROSTER("adds a new course"),
-    	ASSIGN("lists the professors and students of a course"),
+    	
+    	PEOPLE("lists all people"),
+    	PROFESSOR("adds a new professor"),
+    	STUDENT("adds a new student"),
+    	COURSES("lists all courses"),
+    	COURSE("adds a new course"),
+    	ROSTER("lists the professors and students of a course"),
+    	ASSIGN("adds a teacher to a course"),
     	ENROL("adds students to a course"),
     	INTERSECTION("lists all the people involved in all the given courses"),
     	COURSEDEADLINES("lists all deadlines in a given course"),
@@ -89,12 +94,9 @@ public class Main {
     	while(!c.equals(Command.EXIT)) {
     		switch(c) {
     			case HELP: helpCommands(); break;
-    			case STRESSOMETER:break;
-    			case UNKNOWN:
-    				System.out.printf(ERROR_UNKNOWN_COMMAND,comm);
-    				break;
-    			default:
-    				break;
+    			case PEOPLE: break;
+    			case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
+    			default: break;
     		}
     		comm = in.next().toUpperCase();
     		c = getCommand(comm);
