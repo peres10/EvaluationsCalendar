@@ -54,10 +54,21 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	}
 
 	@Override
-	public boolean existCourses() {
-		Iterator<Courses> it = listAllCourses();
-		if(it.hasNext())
-			return true;
+	public boolean existsCourse(String courseName) {
+		Iterator<Courses> courseIt = listAllCourses();
+		Courses course;
+		if(courseIt.hasNext())
+			while(courseIt.hasNext()) {
+				course = (Courses) courseIt.next();
+				if(course.getName().equalsIgnoreCase(courseName))
+					return true;
+			}
 		return false;
+	}
+
+	@Override
+	public void addCourse(String courseName) {
+		// TODO Auto-generated method stub
+		
 	}
 }

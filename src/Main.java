@@ -27,7 +27,7 @@ public class Main {
 	private static final String ERROR_EMPTY_DATABASE = "No people registered!";
 	private static final String ERROR_ALREADY_EXIST_PERSON = "%s already exists!\n";
 	private static final String ERROR_NUMBER_TAKEN = "There is already a student with the number %d!\n";
-	private static final String ERROR_NO_COURSES = "No courses registed!";
+	private static final String ERROR_NO_COURSES = "No courses registered!";
 	private static final String ERROR_COURSE_EXISTS = "Course %s already exists!\n";
 	private static final String ERROR_COURSE_NOT_EXIST = "Course %s does not exist!\n";
 	private static final String ERROR_PROFESSOR_NOT_EXIST = "Professor %s does not exist!";
@@ -102,7 +102,8 @@ public class Main {
 				case PEOPLE: listAllPeople(evCalendar); break;
 				case PROFESSOR: addProfessor(evCalendar, in); break;
 				case STUDENT: addStudent(evCalendar, in); break;
-				//case COURSES: listAllCourses(evCalendar); break;
+				case COURSES: listAllCourses(evCalendar); break;
+				case COURSE: addCourse(evCalendar, in); break;
 				case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
 				default: break;
 			}
@@ -166,16 +167,27 @@ public class Main {
 		}
 	}
 
-	/*private static void listAllCourses(EvaluationsCalendar evCalendar) {
-		if(!evCalendar.existCourses()) {
-			System.out.println(ERROR_NO_COURSES);
-		}
-		else {
-			Iterator<Courses> course = evCalendar.listAllCourses();
-			while(course.hasNext()) {
-				System.out.println(LIST_COURSES_FORMAT, course.getName(), course.getNumberOfStudents(), course.getNumberOfTests(), course.getNumberOfDeadlines());
-			}
-
-		}
-	}*/
+	private static void listAllCourses(EvaluationsCalendar evCalendar) {
+		Courses course;
+        Iterator<Courses> courseIt = evCalendar.listAllCourses();
+        
+		if(!courseIt.hasNext()) {
+            System.out.println(ERROR_NO_COURSES);
+        }
+        else {   
+            while(courseIt.hasNext()) {
+                course = (Courses) courseIt.next();
+                System.out.printf(LIST_COURSES_FORMAT, course.getName(), course.getNumberOfProfessors(), course.getNumberOfStudents(), course.getNumberOfTests(), course.getNumberOfDeadlines());
+            }
+        }
+    }
+	
+	private static void addCourse(EvaluationsCalendar evCalendar, Scanner in) {
+		String courseName = in.nextLine();
+		if(evCalendar.existsCourse(courseName))
+			System.out.printf(ERROR_COURSE_EXISTS, courseName);
+		else
+			evCalendar.addCourse(courseName);
+			System.out.printf(PERSON_OR_COURSE_ADDED, courseName);
+	}
 }

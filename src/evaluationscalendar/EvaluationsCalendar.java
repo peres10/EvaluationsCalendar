@@ -16,6 +16,8 @@ public interface EvaluationsCalendar {
 
 	Iterator<Courses> listAllCourses();
 
-	boolean existCourses();
+	boolean existsCourse(String courseName);
+
+	void addCourse(String courseName);
 
 }
