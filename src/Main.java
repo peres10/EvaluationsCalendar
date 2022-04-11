@@ -117,8 +117,46 @@ public class Main {
     	}
     }
 
-	private static void addProfessor(Scanner in){
+	private static void listAllPeople(EvaluationsCalendar evCalendar){
+		Iterator<People> it = evCalendar.listAllPeople();
+		if(!it.hasNext()){
+			System.out.println(ERROR_EMPTY_DATABASE);
+		}
+		else{
+			while(it.hasNext()){
+				People person = it.next();
+				if(person instanceof Student){
+					System.out.printf(LIST_STUDENT_FORMAT,person.getStudentNumber(),person.getName(),person.getNumOfCourses);
+				}
+				else{
+					System.out.printf(LIST_PROFESSOR_FORMAT,person.getName(),person.getNumOfCourses);
+				}
+			}
+		}
+	}
+	private static void addProfessor(EvaluationsCalendar evCalendar,Scanner in){
 		String name=in.next();
-		if(!existPerson(name))
+		if(evCalendar.existPerson(name)){
+			System.out.printf(ERROR_ALREADY_EXIST_PERSON,name);
+		}
+		else{
+			evCalendar.addProfessor(name);
+			System.out.printf(PERSON_OR_COURSE_ADDED,name);
+		}
+	}
+
+	private static void addStudent(EvaluationsCalendar evCalendar,Scanner in){
+		int numStudent=in.nextInt();
+		String name=in.next();
+		if(evCalendar.existStudentNum(numStudent)){
+			System.out.printf(ERROR_NUMBER_TAKEN,numStudent);
+		}
+		else if(evCalendar.existPerson(name)){
+			System.out.printf(ERROR_ALREADY_EXIST_PERSON,name);
+		}
+		else{
+			evCalendar.addStudent(name,int);
+			System.out.printf(PERSON_OR_COURSE_ADDED,name);
+		}
 	}
 }
