@@ -1,8 +1,8 @@
 package evaluationcalendar;
 
-public class EvaluationsCalendarClass implements EvaluationCalendar {
+public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
-    public EvaluationCalendarClass(){
+    /*public EvaluationCalendarClass(){
 
-    }
+    }*/
 }

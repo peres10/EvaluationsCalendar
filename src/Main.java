@@ -1,4 +1,6 @@
 
+import evaluationcalendar.*;
+
 import java.util.*;
 
 public class Main {
@@ -88,6 +90,7 @@ public class Main {
     }
     	
     private static void commands(){
+		EvaluationsCalendar evCalendar = new EvaluationsCalendarClass();
     	Scanner in = new Scanner(System.in);
     	String comm = in.next().toUpperCase();
     	Command c = getCommand(comm);
@@ -95,6 +98,7 @@ public class Main {
     		switch(c) {
     			case HELP: helpCommands(); break;
     			case PEOPLE: break;
+				case PROFESSOR: addProfessor(in); break;
     			case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
     			default: break;
     		}
@@ -112,4 +116,9 @@ public class Main {
     		System.out.println(command.name().toLowerCase() + " - " + command.description());
     	}
     }
+
+	private static void addProfessor(Scanner in){
+		String name=in.next();
+		if(!existPerson(name))
+	}
 }
