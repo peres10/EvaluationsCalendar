@@ -118,18 +118,18 @@ public class Main {
     }
 
 	private static void listAllPeople(EvaluationsCalendar evCalendar){
-		Iterator<People> it = evCalendar.listAllPeople();
+		Iterator<Person> it = evCalendar.listAllPeople();
 		if(!it.hasNext()){
 			System.out.println(ERROR_EMPTY_DATABASE);
 		}
 		else{
 			while(it.hasNext()){
-				People person = it.next();
-				if(person instanceof Student){
-					System.out.printf(LIST_STUDENT_FORMAT,person.getStudentNumber(),person.getName(),person.getNumOfCourses);
+				Person person = it.next();
+				if(person instanceof StudentClass){
+					System.out.printf(LIST_STUDENT_FORMAT,person.getStudentNumber(),person.getName(),person.getNumOfCourses();
 				}
 				else{
-					System.out.printf(LIST_PROFESSOR_FORMAT,person.getName(),person.getNumOfCourses);
+					System.out.printf(LIST_PROFESSOR_FORMAT,person.getName(),person.getNumOfCourses();
 				}
 			}
 		}
@@ -155,7 +155,7 @@ public class Main {
 			System.out.printf(ERROR_ALREADY_EXIST_PERSON,name);
 		}
 		else{
-			evCalendar.addStudent(name,int);
+			evCalendar.addStudent(name,numStudent);
 			System.out.printf(PERSON_OR_COURSE_ADDED,name);
 		}
 	}
