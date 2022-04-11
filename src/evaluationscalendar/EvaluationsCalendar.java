@@ -1,4 +1,4 @@
-package evaluationcalendar;
+package evaluationscalendar;
 
 public interface EvaluationsCalendar {
 

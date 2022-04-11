@@ -1,5 +1,5 @@
 
-import evaluationcalendar.*;
+import evaluationscalendar.*;
 
 import java.util.*;
 
