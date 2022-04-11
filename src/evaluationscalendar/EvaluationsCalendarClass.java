@@ -4,38 +4,56 @@ import dataStructures.*;
 
 public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	Array<Person> people;
-	
+	Array<Courses> courses;
 	public EvaluationsCalendarClass() {
 		people = new ArrayClass<>();
+		courses = new ArrayClass<>();
 	}
 	
 	@Override
 	public void addStudent(String name, int numStudent) {
-		
-		
+		people.insertLast(new StudentClass(name, numStudent));
 	}
 
 	@Override
 	public void addProfessor(String name) {
-		// TODO Auto-generated method stub
-		
+		people.insertLast(new ProfessorClass(name));
 	}
 
 	@Override
 	public boolean existPerson(String name) {
-		// TODO Auto-generated method stub
+		Iterator<Person> it = listAllPeople();
+		while(it.hasNext()) {
+			if(it.next().getName() == name)
+				return true;
+		}
 		return false;
 	}
 	
 	@Override
 	public boolean existStudentNum(int numStudent) {
-		// TODO Auto-generated method stub
+		Iterator<Person> it = listAllPeople();
+		while(it.hasNext()) {
+			if((it.next() instanceof StudentClass) && it.next().getStudentNumber() == numStudent)
+				return true;
+		}
 		return false;
 	}	
 	
 	@Override
-	public Iterator<People> listAllPeople() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<Person> listAllPeople() {
+		return people.iterator();
+	}
+	
+	public Iterator<Courses> listAllCourses() {
+		return courses.iterator();
+	}
+
+	@Override
+	public boolean existCourses() {
+		Iterator<Courses> it = listAllCourses();
+		if(it.hasNext())
+			return true;
+		return false;
 	}
 }

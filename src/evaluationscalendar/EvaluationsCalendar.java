@@ -1,6 +1,6 @@
 package evaluationscalendar;
 
-import java.util.Iterator;
+import dataStructures.*;
 
 public interface EvaluationsCalendar {
 	
@@ -13,5 +13,9 @@ public interface EvaluationsCalendar {
 	boolean existStudentNum(int numStudent);
 	
 	Iterator<Person> listAllPeople();
+
+	Iterator<Courses> listAllCourses();
+
+	boolean existCourses();
 
 }

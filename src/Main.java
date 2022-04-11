@@ -1,7 +1,9 @@
 
 import evaluationscalendar.*;
 
-import java.util.*;
+import java.util.Scanner;
+
+import dataStructures.*;
 
 public class Main {
     
@@ -97,9 +99,11 @@ public class Main {
     	while(!c.equals(Command.EXIT)) {
     		switch(c) {
     			case HELP: helpCommands(); break;
-    			case PEOPLE: break;
-				case PROFESSOR: addProfessor(in); break;
-    			case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
+    			case PEOPLE: listAllPeople(evCalendar); break;
+				case PROFESSOR: addProfessor(evCalendar, in); break;
+				case STUDENT: addStudent(evCalendar, in); break;
+				case COURSES: listAllCourses(evCalendar); break;
+				case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
     			default: break;
     		}
     		comm = in.next().toUpperCase();
@@ -117,8 +121,9 @@ public class Main {
     	}
     }
 
-	private static void listAllPeople(EvaluationsCalendar evCalendar){
+    private static void listAllPeople(EvaluationsCalendar evCalendar){		
 		Iterator<Person> it = evCalendar.listAllPeople();
+		
 		if(!it.hasNext()){
 			System.out.println(ERROR_EMPTY_DATABASE);
 		}
@@ -126,14 +131,15 @@ public class Main {
 			while(it.hasNext()){
 				Person person = it.next();
 				if(person instanceof StudentClass){
-					System.out.printf(LIST_STUDENT_FORMAT,person.getStudentNumber(),person.getName(),person.getNumOfCourses();
+					System.out.printf(LIST_STUDENT_FORMAT,person.getStudentNumber(),person.getName(),person.getNumOfCourses());
 				}
 				else{
-					System.out.printf(LIST_PROFESSOR_FORMAT,person.getName(),person.getNumOfCourses();
+					System.out.printf(LIST_PROFESSOR_FORMAT,person.getName(),person.getNumOfCourses());
 				}
 			}
 		}
 	}
+    
 	private static void addProfessor(EvaluationsCalendar evCalendar,Scanner in){
 		String name=in.next();
 		if(evCalendar.existPerson(name)){
@@ -157,6 +163,19 @@ public class Main {
 		else{
 			evCalendar.addStudent(name,numStudent);
 			System.out.printf(PERSON_OR_COURSE_ADDED,name);
+		}
+	}
+
+	private static void listAllCourses(EvaluationsCalendar evCalendar) {
+		if(!evCalendar.existCourses()) {
+			System.out.println(ERROR_NO_COURSES);
+		}
+		else {
+			Iterator<Courses> course = evCalendar.listAllCourses();
+			while(course.hasNext()) {
+				System.out.println(LIST_COURSES_FORMAT, course.getName(), course.getNumberOfStudents(), course.getNumberOfTests(), course.getNumberOfDeadlines());
+			}
+				
 		}
 	}
 }
