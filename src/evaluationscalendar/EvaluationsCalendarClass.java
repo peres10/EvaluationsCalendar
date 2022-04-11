@@ -24,7 +24,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	public boolean existPerson(String name) {
 		Iterator<Person> it = listAllPeople();
 		while(it.hasNext()) {
-			if(it.next().getName() == name)
+			if(it.next().getName().equals(name))
 				return true;
 		}
 		return false;
@@ -33,9 +33,13 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	@Override
 	public boolean existStudentNum(int numStudent) {
 		Iterator<Person> it = listAllPeople();
+		Person person;
 		while(it.hasNext()) {
-			if((it.next() instanceof StudentClass) && it.next().getStudentNumber() == numStudent)
-				return true;
+			person=it.next();
+			if(person instanceof StudentClass) {
+				if (((StudentClass)person).getStudentNumber() == numStudent)
+					return true;
+			}
 		}
 		return false;
 	}	

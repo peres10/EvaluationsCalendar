@@ -1,13 +1,12 @@
 package evaluationscalendar;
 
-public class StudentClass extends PersonClass{
+public class StudentClass extends PersonClass implements Student{
 	private int studentNum;
 	public StudentClass(String name,int studentNum) {
 		super(name);
 		this.studentNum = studentNum;
 	}
 
-	@Override
 	public int getStudentNumber() {
 		return this.studentNum;
 	}
