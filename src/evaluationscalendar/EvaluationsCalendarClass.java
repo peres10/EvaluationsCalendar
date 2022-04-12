@@ -3,8 +3,8 @@ package evaluationscalendar;
 import dataStructures.*;
 
 public class EvaluationsCalendarClass implements EvaluationsCalendar {
-	Array<Person> people;
-	Array<Courses> courses;
+	private Array<Person> people;
+	private Array<Courses> courses;
 	public EvaluationsCalendarClass() {
 		people = new ArrayClass<>();
 		courses = new ArrayClass<>();
@@ -48,27 +48,42 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	public Iterator<Person> listAllPeople() {
 		return people.iterator();
 	}
-	
+
+	@Override
 	public Iterator<Courses> listAllCourses() {
 		return courses.iterator();
 	}
 
 	@Override
 	public boolean existsCourse(String courseName) {
-		Iterator<Courses> courseIt = listAllCourses();
-		Courses course;
-		if(courseIt.hasNext())
-			while(courseIt.hasNext()) {
-				course = (Courses) courseIt.next();
-				if(course.getName().equalsIgnoreCase(courseName))
-					return true;
-			}
-		return false;
+		return searchCourse(courseName) != null;
 	}
 
 	@Override
 	public void addCourse(String courseName) {
-		// TODO Auto-generated method stub
-		
+		courses.insertLast(new CoursesClass(courseName));
+	}
+
+	@Override
+	public Iterator<Person> listStudentsInCourse(String courseName){
+		return searchCourse(courseName).getListOfStudentsCourse();
+	}
+
+	@Override
+	public Iterator<Person> listProfessorsInCourse(String courseName){
+		return searchCourse(courseName).getListOfProfessorsCourse();
+	}
+
+
+	private Courses searchCourse(String courseName){
+		Iterator<Courses> courseIt = listAllCourses();
+		Courses course;
+		if(courseIt.hasNext())
+			while(courseIt.hasNext()) {
+				course = courseIt.next();
+				if(course.getName().equalsIgnoreCase(courseName))
+					return course;
+			}
+		return null;
 	}
 }

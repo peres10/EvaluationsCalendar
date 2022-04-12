@@ -20,4 +20,8 @@ public interface EvaluationsCalendar {
 
 	void addCourse(String courseName);
 
+	Iterator<Person> listStudentsInCourse(String courseName);
+
+	Iterator<Person> listProfessorsInCourse(String courseName);
+
 }

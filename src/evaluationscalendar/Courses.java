@@ -1,10 +1,12 @@
 package evaluationscalendar;
 
+import dataStructures.Iterator;
+
 public interface Courses {
 	String getName();
-	void addProfessor();
+	void addProfessor(Person professor);
 	
-	void addStudent();
+	void addStudent(Person student);
 	
 	void addTest();
 	
@@ -17,4 +19,8 @@ public interface Courses {
 	int getNumberOfTests();
 	
 	int getNumberOfDeadlines();
+
+	Iterator<Person> getListOfProfessorsCourse();
+
+	Iterator<Person> getListOfStudentsCourse();
 }

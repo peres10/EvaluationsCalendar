@@ -1,26 +1,31 @@
 package evaluationscalendar;
 
+import dataStructures.*;
+
 public class CoursesClass implements Courses {
 	private String courseName;
-	private int numberOfProfessors;
-	private int numberOfStudents;
+	/*private int numberOfProfessors;
+	private int numberOfStudents;*/
 	private int numberOfTests;
 	private int numberOfDeadlines;
-	
+
+	private Array<Person> professors;
+	private Array<Person> students;
+
 	public CoursesClass(String courseName) {
 		this.courseName = courseName;
-		this.numberOfProfessors = 0;
-		this.numberOfStudents = 0;
+		professors = new ArrayClass<>();
+		students = new ArrayClass<>();
 		this.numberOfTests = 0;
 		this.numberOfDeadlines = 0;
 	}
 	
-	public void addProfessor() {
-		this.numberOfProfessors++;
+	public void addProfessor(Person professor) {
+		professors.insertLast(professor);
 	}
 	
-	public void addStudent() {
-		this.numberOfStudents++;
+	public void addStudent(Person student) {
+		students.insertLast(student);
 	}
 	
 	public void addTest() {
@@ -35,13 +40,14 @@ public class CoursesClass implements Courses {
 	public String getName() {
 		return this.courseName;
 	}
-	
+
+	@Override
 	public int getNumberOfProfessors() {
-		return this.numberOfProfessors;
+		return professors.size();
 	}
 	@Override
 	public int getNumberOfStudents() {
-		return this.numberOfStudents;
+		return students.size();
 	}
 
 	@Override
@@ -53,5 +59,14 @@ public class CoursesClass implements Courses {
 	public int getNumberOfDeadlines() {
 		return this.numberOfDeadlines;
 	}
+
+	public Iterator<Person> getListOfProfessorsCourse(){
+		return professors.iterator();
+	}
+
+	public Iterator<Person> getListOfStudentsCourse(){
+		return students.iterator();
+	}
+
 
 }

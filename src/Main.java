@@ -1,4 +1,3 @@
-
 import evaluationscalendar.*;
 
 import java.util.Scanner;
@@ -70,14 +69,14 @@ public class Main {
 
 		private final String cmdDesc;
 
-		private Command(String cmdDesc) {
+		Command(String cmdDesc) {
 			this.cmdDesc=cmdDesc;
 		}
 
 		private String description() {
 			return cmdDesc;
 		}
-	};
+	}
 
 	public static void main(String[] args) {
 		commands();
@@ -104,6 +103,7 @@ public class Main {
 				case STUDENT: addStudent(evCalendar, in); break;
 				case COURSES: listAllCourses(evCalendar); break;
 				case COURSE: addCourse(evCalendar, in); break;
+				case ROSTER: courseRoster(evCalendar, in); break;
 				case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
 				default: break;
 			}
@@ -169,25 +169,48 @@ public class Main {
 
 	private static void listAllCourses(EvaluationsCalendar evCalendar) {
 		Courses course;
-        Iterator<Courses> courseIt = evCalendar.listAllCourses();
-        
+		Iterator<Courses> courseIt = evCalendar.listAllCourses();
+
 		if(!courseIt.hasNext()) {
-            System.out.println(ERROR_NO_COURSES);
-        }
-        else {   
-            while(courseIt.hasNext()) {
-                course = (Courses) courseIt.next();
-                System.out.printf(LIST_COURSES_FORMAT, course.getName(), course.getNumberOfProfessors(), course.getNumberOfStudents(), course.getNumberOfTests(), course.getNumberOfDeadlines());
-            }
-        }
-    }
-	
+			System.out.println(ERROR_NO_COURSES);
+		}
+		else {
+			while(courseIt.hasNext()) {
+				course = courseIt.next();
+				System.out.printf(LIST_COURSES_FORMAT, course.getName(), course.getNumberOfProfessors(), course.getNumberOfStudents(), course.getNumberOfTests(), course.getNumberOfDeadlines());
+			}
+		}
+	}
+
 	private static void addCourse(EvaluationsCalendar evCalendar, Scanner in) {
-		String courseName = in.nextLine();
+		String courseName = in.nextLine().trim();
 		if(evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_EXISTS, courseName);
-		else
+		else {
 			evCalendar.addCourse(courseName);
 			System.out.printf(PERSON_OR_COURSE_ADDED, courseName);
+		}
+	}
+
+	private static void courseRoster(EvaluationsCalendar evCalendar, Scanner in){
+		String courseName = in.nextLine().trim();
+		Iterator<Person> itStudents,itProfessors;
+		Person person;
+		if(!evCalendar.existsCourse(courseName))
+			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
+		else{
+			itProfessors=evCalendar.listProfessorsInCourse(courseName);
+			itStudents=evCalendar.listStudentsInCourse(courseName);
+			System.out.println(HEADER_PROFESSORS);
+			while(itProfessors.hasNext()) {
+				person = itProfessors.next();
+				System.out.println(person.getName());
+			}
+			System.out.println(HEADER_STUDENTS);
+			while(itStudents.hasNext()){
+				person = itStudents.next();
+				System.out.printf(LIST_STUDENT_W_NUMBER,((Student)person).getStudentNumber(),person.getName());
+			}
+		}
 	}
 }
