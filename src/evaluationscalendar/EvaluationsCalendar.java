@@ -24,4 +24,12 @@ public interface EvaluationsCalendar {
 
 	Iterator<Person> listProfessorsInCourse(String courseName);
 
+	boolean professorInCourse(String professorName, String courseName);
+
+	void assignProfessorToCourse(String professorName, String courseName);
+
+	boolean studentInCourse(String studentName, String courseName);
+
+	void enrolStudentInCourse(String studentName, String courseName);
+
 }

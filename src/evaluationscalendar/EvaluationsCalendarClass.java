@@ -86,4 +86,41 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 			}
 		return null;
 	}
+
+	@Override
+	public boolean professorInCourse(String professorName, String courseName) {
+		Iterator<Person> professorIt = listProfessorsInCourse(courseName);
+		Person professor;
+		
+		while(professorIt.hasNext()) {
+			professor = professorIt.next();
+			if(professor.getName().equals(professorName))
+					return true;		
+		}	
+		return false;
+	}
+
+	@Override
+	public boolean studentInCourse(String studentName, String courseName) {
+		Iterator<Person> studentIt = listProfessorsInCourse(courseName);
+		Person student;
+		
+		while(studentIt.hasNext()) {
+			student = studentIt.next();
+			if(student.getName().equals(studentName))
+					return true;		
+		}	
+		return false;
+	}
+
+	@Override
+	public void enrolStudentInCourse(String studentName, String courseName) {
+		// TODO Auto-generated method stub
+		
+	}	
+	
+	@Override
+	public void assignProfessorToCourse(String professorName, String courseName) {
+		
+	}
 }
