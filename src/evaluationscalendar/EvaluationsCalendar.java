@@ -8,28 +8,32 @@ public interface EvaluationsCalendar {
 
 	void addProfessor(String name);
 	
+	void addCourse(String courseName);
+
 	boolean existPerson(String name);
 
 	boolean existStudentNum(int numStudent);
 	
-	Iterator<Person> listAllPeople();
-
-	Iterator<Courses> listAllCourses();
-
 	boolean existsCourse(String courseName);
 
-	void addCourse(String courseName);
+	Courses searchCourse(String courseName);
 
-	Iterator<Person> listStudentsInCourse(String courseName);
-
-	Iterator<Person> listProfessorsInCourse(String courseName);
+	Person searchPerson(String personName);
+	
+	boolean studentInCourse(String studentName, String courseName);
 
 	boolean professorInCourse(String professorName, String courseName);
 
 	void assignProfessorToCourse(String professorName, String courseName);
 
-	boolean studentInCourse(String studentName, String courseName);
-
 	void enrolStudentInCourse(String studentName, String courseName);
+
+	Iterator<Person> listAllPeople();
+
+	Iterator<Courses> listAllCourses();
+
+	Iterator<Person> listStudentsInCourse(String courseName);
+
+	Iterator<Person> listProfessorsInCourse(String courseName);
 
 }

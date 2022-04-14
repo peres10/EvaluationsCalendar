@@ -11,23 +11,23 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	}
 	
 	@Override
-	public void addStudent(String name, int numStudent) {
-		people.insertLast(new StudentClass(name, numStudent));
+	public void addStudent(String studentName, int numStudent) {
+		people.insertLast(new StudentClass(studentName, numStudent));
 	}
 
 	@Override
-	public void addProfessor(String name) {
-		people.insertLast(new ProfessorClass(name));
+	public void addProfessor(String professorName) {
+		people.insertLast(new ProfessorClass(professorName));
 	}
 
 	@Override
-	public boolean existPerson(String name) {
-		Iterator<Person> it = listAllPeople();
-		while(it.hasNext()) {
-			if(it.next().getName().equals(name))
-				return true;
-		}
-		return false;
+	public void addCourse(String courseName) {
+		courses.insertLast(new CoursesClass(courseName));
+	}
+
+	@Override
+	public boolean existPerson(String personName) {
+		return searchPerson(personName) != null;
 	}
 	
 	@Override
@@ -45,46 +45,43 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	}	
 	
 	@Override
-	public Iterator<Person> listAllPeople() {
-		return people.iterator();
-	}
-
-	@Override
-	public Iterator<Courses> listAllCourses() {
-		return courses.iterator();
-	}
-
-	@Override
 	public boolean existsCourse(String courseName) {
 		return searchCourse(courseName) != null;
 	}
 
-	@Override
-	public void addCourse(String courseName) {
-		courses.insertLast(new CoursesClass(courseName));
-	}
-
-	@Override
-	public Iterator<Person> listStudentsInCourse(String courseName){
-		return searchCourse(courseName).getListOfStudentsCourse();
-	}
-
-	@Override
-	public Iterator<Person> listProfessorsInCourse(String courseName){
-		return searchCourse(courseName).getListOfProfessorsCourse();
-	}
-
-
-	private Courses searchCourse(String courseName){
+	public Courses searchCourse(String courseName) {
 		Iterator<Courses> courseIt = listAllCourses();
 		Courses course;
-		if(courseIt.hasNext())
-			while(courseIt.hasNext()) {
-				course = courseIt.next();
-				if(course.getName().equalsIgnoreCase(courseName))
-					return course;
-			}
+		while(courseIt.hasNext()) {
+			course = courseIt.next();
+			if(course.getName().equalsIgnoreCase(courseName))
+				return course;
+		}
 		return null;
+	}
+
+	public Person searchPerson(String personName) {
+		Iterator<Person> personIt = listAllPeople();
+		Person person;
+		while(personIt.hasNext()) {
+			person = personIt.next();
+			if(person.getName().equalsIgnoreCase(personName))
+				return person;
+		}
+		return null;		
+	}
+
+	@Override
+	public boolean studentInCourse(String studentName, String courseName) {
+		Iterator<Person> studentIt = listStudentsInCourse(courseName);
+		Person student;
+		
+		while(studentIt.hasNext()) {
+			student = studentIt.next();
+			if(student.getName().equals(studentName))
+					return true;		
+		}	
+		return false;
 	}
 
 	@Override
@@ -101,26 +98,33 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	}
 
 	@Override
-	public boolean studentInCourse(String studentName, String courseName) {
-		Iterator<Person> studentIt = listProfessorsInCourse(courseName);
-		Person student;
+	public void assignProfessorToCourse(String professorName, String courseName) {
 		
-		while(studentIt.hasNext()) {
-			student = studentIt.next();
-			if(student.getName().equals(studentName))
-					return true;		
-		}	
-		return false;
 	}
 
 	@Override
 	public void enrolStudentInCourse(String studentName, String courseName) {
 		// TODO Auto-generated method stub
 		
-	}	
-	
+	}
+
 	@Override
-	public void assignProfessorToCourse(String professorName, String courseName) {
-		
+	public Iterator<Person> listAllPeople() {
+		return people.iterator();
+	}
+
+	@Override
+	public Iterator<Courses> listAllCourses() {
+		return courses.iterator();
+	}
+
+	@Override
+	public Iterator<Person> listStudentsInCourse(String courseName) {
+		return searchCourse(courseName).getListOfStudentsCourse();
+	}
+
+	@Override
+	public Iterator<Person> listProfessorsInCourse(String courseName) {
+		return searchCourse(courseName).getListOfProfessorsCourse();
 	}
 }

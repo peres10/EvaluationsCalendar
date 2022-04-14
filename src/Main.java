@@ -245,39 +245,41 @@ public class Main {
 	private static void enrolStudent(EvaluationsCalendar evCalendar, Scanner in) {
 		int numStudents = in.nextInt();
 		String courseName = in.nextLine().trim();
-		int i = 0;
+		int i = 0, enrolledStudents = numStudents;
 		if(numStudents <= 0) {
 			System.out.println(ERROR_INADEQUATE_NUM_STUDENTS);
 			return;
 		}
 		
+		String currentStudent;
 		Array<String> studentName = new ArrayClass<>();
 		
-		for(i = 0; i < numStudents; i++) 
-			studentName.insertLast(in.nextLine().trim());
-		
-		for(i = 0; i < numStudents; i++) {
+		for(i = 0; i < numStudents; i++) { 
+			currentStudent = in.nextLine().trim();
 			
-			if(!evCalendar.existPerson(studentName.get(i))) {
-				System.out.printf(ERROR_STUDENT_NOT_EXIST, studentName.get(i));
-				return;
+			if(!evCalendar.existPerson(currentStudent)) {
+				System.out.printf(ERROR_STUDENT_NOT_EXIST, currentStudent);
+				enrolledStudents--;
 			}
-			else if(evCalendar.studentInCourse(studentName.get(i), courseName)) {
-				System.out.printf(ERROR_STUDENT_ALREADY_ENROLLED, studentName.get(i), courseName);
-				return;
+			else if(evCalendar.studentInCourse(currentStudent, courseName)) {
+				System.out.printf(ERROR_STUDENT_ALREADY_ENROLLED, currentStudent, courseName);
+				enrolledStudents--;
 			}
+			else
+				studentName.insertLast(currentStudent);
 		}	
-		
-		if(!evCalendar.existsCourse(courseName))
+	
+		if(!evCalendar.existsCourse(courseName)) {
 		 	System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
-		
-		else {
-			for(i = 0; i < numStudents; i++) 
-				evCalendar.enrolStudentInCourse(studentName.get(i), courseName);
-			
-			System.out.printf(STUDENTS_ADDED_TO_COURSE, numStudents, courseName);
+		 	return;
 		}
+		 	
+		for(i = 0; i < enrolledStudents; i++)
+			evCalendar.enrolStudentInCourse(studentName.get(i), courseName);
+
+		System.out.printf(STUDENTS_ADDED_TO_COURSE, enrolledStudents, courseName);
 	}
+	
 	
 	private static void intersection(EvaluationsCalendar evCalendar, Scanner in) {
 		// TODO Auto-generated method stub
@@ -285,8 +287,7 @@ public class Main {
 	}
 	
 	private static void stressometer(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	private static void superProfessor(EvaluationsCalendar evCalendar) {
