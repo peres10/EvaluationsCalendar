@@ -4,8 +4,6 @@ import dataStructures.*;
 
 public class CoursesClass implements Courses {
 	private String courseName;
-	/*private int numberOfProfessors;
-	private int numberOfStudents;*/
 	private int numberOfTests;
 	private int numberOfDeadlines;
 
@@ -21,10 +19,12 @@ public class CoursesClass implements Courses {
 	}
 	
 	public void addProfessor(Person professor) {
+		professor.addCourse();
 		professors.insertLast(professor);
 	}
 	
 	public void addStudent(Person student) {
+		student.addCourse();
 		students.insertLast(student);
 	}
 	

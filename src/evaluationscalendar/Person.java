@@ -5,4 +5,6 @@ public interface Person {
 	String getName();
 	
 	int getNumOfCourses();
+	
+	void addCourse();
 }

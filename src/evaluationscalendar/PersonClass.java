@@ -17,5 +17,7 @@ public abstract class PersonClass implements Person {
 		return this.numCourses;
 	}
 	
-	
+	public void addCourse() {
+		this.numCourses++;
+	}
 }

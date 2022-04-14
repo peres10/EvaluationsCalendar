@@ -28,6 +28,10 @@ public interface EvaluationsCalendar {
 
 	void enrolStudentInCourse(String studentName, String courseName);
 
+	Array<Person> courseIntersectionStudents(Array<String> coursesName);
+
+	Array<Person> courseIntersectionProfessors(Array<String> coursesName);
+	
 	Iterator<Person> listAllPeople();
 
 	Iterator<Courses> listAllCourses();

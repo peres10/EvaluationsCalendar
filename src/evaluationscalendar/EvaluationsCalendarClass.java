@@ -70,7 +70,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		}
 		return null;		
 	}
-
+	
 	@Override
 	public boolean studentInCourse(String studentName, String courseName) {
 		Iterator<Person> studentIt = listStudentsInCourse(courseName);
@@ -99,11 +99,28 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	@Override
 	public void assignProfessorToCourse(String professorName, String courseName) {
-		
+		Courses course = searchCourse(courseName);
+		Person professor = searchPerson(professorName);
+		course.addProfessor(professor);
 	}
 
 	@Override
 	public void enrolStudentInCourse(String studentName, String courseName) {
+		Courses course = searchCourse(courseName);
+		Person student = searchPerson(studentName);
+		course.addStudent(student);		
+	}
+
+	@Override
+	public Array<Person> courseIntersectionStudents(Array<String> coursesName) {
+		return people;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Array<Person> courseIntersectionProfessors(Array<String> coursesName) {
+		return people;
 		// TODO Auto-generated method stub
 		
 	}
