@@ -99,16 +99,19 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	@Override
 	public void assignProfessorToCourse(String professorName, String courseName) {
-		Courses course = searchCourse(courseName);
-		Person professor = searchPerson(professorName);
-		course.addProfessor(professor);
+		//Courses course = searchCourse(courseName);
+		//Person professor = searchPerson(professorName);
+		//course.addProfessor(professor);
+		//course.addProfessor(searchPerson(professorName));
+		searchCourse(courseName).addProfessor(searchPerson(professorName));
 	}
 
 	@Override
 	public void enrolStudentInCourse(String studentName, String courseName) {
 		Courses course = searchCourse(courseName);
-		Person student = searchPerson(studentName);
-		course.addStudent(student);		
+		//Person student = searchPerson(studentName);
+		//course.addStudent(student);	
+		searchCourse(courseName).addStudent(searchPerson(studentName));
 	}
 
 	@Override
