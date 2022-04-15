@@ -49,7 +49,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return searchCourse(courseName) != null;
 	}
 
-	public Courses searchCourse(String courseName) {
+	private Courses searchCourse(String courseName) {
 		Iterator<Courses> courseIt = listAllCourses();
 		Courses course;
 		while(courseIt.hasNext()) {
@@ -60,7 +60,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return null;
 	}
 
-	public Person searchPerson(String personName) {
+	private Person searchPerson(String personName) {
 		Iterator<Person> personIt = listAllPeople();
 		Person person;
 		while(personIt.hasNext()) {

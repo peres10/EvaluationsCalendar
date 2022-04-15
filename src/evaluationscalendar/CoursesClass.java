@@ -17,21 +17,25 @@ public class CoursesClass implements Courses {
 		this.numberOfTests = 0;
 		this.numberOfDeadlines = 0;
 	}
-	
+
+	@Override
 	public void addProfessor(Person professor) {
 		professor.addCourse();
 		professors.insertLast(professor);
 	}
-	
+
+	@Override
 	public void addStudent(Person student) {
 		student.addCourse();
 		students.insertLast(student);
 	}
-	
+
+	@Override
 	public void addTest() {
 		this.numberOfTests++;
 	}
-	
+
+	@Override
 	public void addDeadline() {
 		this.numberOfDeadlines++;
 	}
@@ -45,6 +49,7 @@ public class CoursesClass implements Courses {
 	public int getNumberOfProfessors() {
 		return professors.size();
 	}
+
 	@Override
 	public int getNumberOfStudents() {
 		return students.size();
@@ -60,10 +65,12 @@ public class CoursesClass implements Courses {
 		return this.numberOfDeadlines;
 	}
 
+	@Override
 	public Iterator<Person> getListOfProfessorsCourse(){
 		return professors.iterator();
 	}
 
+	@Override
 	public Iterator<Person> getListOfStudentsCourse(){
 		return students.iterator();
 	}

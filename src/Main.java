@@ -87,7 +87,7 @@ public class Main {
 	private static Command getCommand(String comm) {
 		try {
 			return Command.valueOf(comm);
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {moo
 			return Command.UNKNOWN;
 		}
 	}
