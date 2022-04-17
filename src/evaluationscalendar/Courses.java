@@ -1,5 +1,6 @@
 package evaluationscalendar;
 
+import dataStructures.Array;
 import dataStructures.Iterator;
 
 /**
@@ -61,4 +62,8 @@ public interface Courses {
 	 * @return Iterator of Person (with the students)
 	 */
 	Iterator<Person> getListOfStudentsCourse();
+
+	Array<Person> getArrayOfProfessors();
+
+	Array<Person> getArrayOfStudents();
 }

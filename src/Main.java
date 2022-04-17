@@ -87,7 +87,7 @@ public class Main {
 	private static Command getCommand(String comm) {
 		try {
 			return Command.valueOf(comm);
-		} catch (IllegalArgumentException e) {moo
+		} catch (IllegalArgumentException e) {
 			return Command.UNKNOWN;
 		}
 	}
@@ -285,8 +285,8 @@ public class Main {
 		int numCourses = in.nextInt();
 		int i;
 		Array<String> coursesName = new ArrayClass<>();
-		Array<Person> students = new ArrayClass<>();
-		Array<Person> professors = new ArrayClass<>();
+		Iterator<Person> students = new ArrayClass<>();
+		Iterator<Person> professors = new ArrayClass<>();
 
 		for(i = 0; i < numCourses; i++) 
 			coursesName.insertLast(in.nextLine().trim());

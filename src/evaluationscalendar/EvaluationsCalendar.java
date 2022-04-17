@@ -82,10 +82,10 @@ public interface EvaluationsCalendar {
 	void enrolStudentInCourse(String studentName, String courseName);
 
 	// not commented yet
-	Array<Person> courseIntersectionStudents(Array<String> coursesName);
+	Iterator<Person> courseIntersectionStudents(Array<String> coursesName);
 
 	// not commented yet
-	Array<Person> courseIntersectionProfessors(Array<String> coursesName);
+	Iterator<Person> courseIntersectionProfessors(Array<String> coursesName);
 
 	/**
 	 * Returns all the people registered in the system

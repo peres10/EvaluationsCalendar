@@ -75,5 +75,8 @@ public class CoursesClass implements Courses {
 		return students.iterator();
 	}
 
+	public Array<Person> getArrayOfStudents(){ return students; }
+
+	public Array<Person> getArrayOfProfessors(){ return professors; }
 
 }
