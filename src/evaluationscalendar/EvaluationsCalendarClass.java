@@ -170,9 +170,10 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		Array<Person> result = null;
 		for(int i=0;i<firstArray.size();i++){
 			for(int j=0;j<secondArray.size();j++) {
-				if (firstArray.get(i).equals(secondArray.get(j)))
+				if (firstArray.get(i).equals(secondArray.get(j))) {
 					result.insertLast(firstArray.get(i));
-				break;
+					break;
+				}
 			}
 		}
 		return result;
