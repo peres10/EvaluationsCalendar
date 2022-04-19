@@ -54,7 +54,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		Courses course;
 		while(courseIt.hasNext()) {
 			course = courseIt.next();
-			if(course.getName().equalsIgnoreCase(courseName))
+			if(course.getName().equals(courseName))
 				return course;
 		}
 		return null;

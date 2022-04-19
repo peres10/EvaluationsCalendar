@@ -14,31 +14,38 @@ public class Main {
 	private static final String HEADER_HELP_COMMAND = "Available commands:";
 	private static final String HEADER_PROFESSORS = "Professors:";
 	private static final String HEADER_STUDENTS = "Students:";
+	private static final String HEADER_ALL_PEOPLE = "All people:";
+	private static final String HEADER_ALL_COURSES = "All courses:";
+	private static final String HEADER_ROSTER = "Roster for course %s:\n";
+	private static final String HEADER_INTERSECTION = "Intersection:";
 	private static final String LIST_STUDENT_FORMAT = "[%d] %s (%d)\n";
 	private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
-	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests, %d deadlines.\n";
+	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
 	private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
 	private static final String LIST_DEADLINE = "%s: %s\n";
 	// private static final String LIST_DEADLINE = ?
 	// private static final String LIST_PERSONAL_DEADLINES = ?
 
 	//error and success messages
-	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands\n";
+	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands.\n";
 	private static final String ERROR_EMPTY_DATABASE = "No people registered!";
 	private static final String ERROR_ALREADY_EXIST_PERSON = "%s already exists!\n";
 	private static final String ERROR_NUMBER_TAKEN = "There is already a student with the number %d!\n";
 	private static final String ERROR_NO_COURSES = "No courses registered!";
 	private static final String ERROR_COURSE_EXISTS = "Course %s already exists!\n";
 	private static final String ERROR_COURSE_NOT_EXIST = "Course %s does not exist!\n";
-	private static final String ERROR_PROFESSOR_NOT_EXIST = "Professor %s does not exist!";
-	private static final String ERROR_STUDENT_NOT_EXIST = "Student %s does not exist!";
-	private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %s!";
+	private static final String ERROR_PROFESSOR_NOT_EXIST = "Professor %s does not exist!\n";
+	private static final String ERROR_STUDENT_NOT_EXIST = "Student %s does not exist!\n";
+	private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %s!\n";
 	private static final String ERROR_INADEQUATE_NUM_STUDENTS = "Inadequate number of students!";
+	private static final String ERROR_INADEQUATE_NUM_COURSES = "Inadequate number of courses!";
 	private static final String ERROR_STUDENT_ALREADY_ENROLLED = "Student %s is already enrolled in course %s!\n";
+	private static final String ERROR_NO_ASSIGN_ENROL = "Course %s has no assigned professors and no enrolled students.\n";
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
-	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s\n";
+	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s!\n";
 
-	private static final String PERSON_OR_COURSE_ADDED = "%s added.\n";
+	private static final String PERSON_ADDED = "%s added.\n";
+	private static final String COURSE_ADDED = "Course %s added.\n";
 	private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
 	private static final String STUDENTS_ADDED_TO_COURSE = "%d students added to course %s.\n";
 
@@ -54,7 +61,7 @@ public class Main {
 		COURSES("lists all courses"),
 		COURSE("adds a new course"),
 		ROSTER("lists the professors and students of a course"),
-		ASSIGN("adds a teacher to a course"),
+		ASSIGN("adds a professor to a course"),
 		ENROL("adds students to a course"),
 		INTERSECTION("lists all the people involved in all the given courses"),
 		COURSEDEADLINES("lists all deadlines in a given course"),
@@ -143,6 +150,7 @@ public class Main {
 			System.out.println(ERROR_EMPTY_DATABASE);
 		}
 		else{
+			System.out.println(HEADER_ALL_PEOPLE);
 			while(it.hasNext()){
 				Person person = it.next();
 				if(person instanceof StudentClass){
@@ -162,7 +170,7 @@ public class Main {
 		}
 		else{
 			evCalendar.addProfessor(name);
-			System.out.printf(PERSON_OR_COURSE_ADDED,name);
+			System.out.printf(PERSON_ADDED,name);
 		}
 	}
 
@@ -177,7 +185,7 @@ public class Main {
 		}
 		else{
 			evCalendar.addStudent(name,numStudent);
-			System.out.printf(PERSON_OR_COURSE_ADDED,name);
+			System.out.printf(PERSON_ADDED,name);
 		}
 	}
 
@@ -189,6 +197,7 @@ public class Main {
 			System.out.println(ERROR_NO_COURSES);
 		}
 		else {
+			System.out.println(HEADER_ALL_COURSES);
 			while(courseIt.hasNext()) {
 				course = courseIt.next();
 				System.out.printf(LIST_COURSES_FORMAT, course.getName(), course.getNumberOfProfessors(), course.getNumberOfStudents(), course.getNumberOfTests(), course.getNumberOfDeadlines());
@@ -202,27 +211,36 @@ public class Main {
 			System.out.printf(ERROR_COURSE_EXISTS, courseName);
 		else {
 			evCalendar.addCourse(courseName);
-			System.out.printf(PERSON_OR_COURSE_ADDED, courseName);
+			System.out.printf(COURSE_ADDED, courseName);
 		}
 	}
 
 	private static void courseRoster(EvaluationsCalendar evCalendar, Scanner in){
 		String courseName = in.nextLine().trim();
-		Iterator<Person> itStudents,itProfessors;
+		Iterator<Person> studentsIT,professorsIT;
 		Person person;
-		if(!evCalendar.existsCourse(courseName))
+		if(!evCalendar.existsCourse(courseName)) {
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
-		else{
-			itProfessors=evCalendar.listProfessorsInCourse(courseName);
-			itStudents=evCalendar.listStudentsInCourse(courseName);
+			return;
+		}
+		
+		professorsIT=evCalendar.listProfessorsInCourse(courseName);		
+		studentsIT=evCalendar.listStudentsInCourse(courseName);
+
+		if(!professorsIT.hasNext() && !studentsIT.hasNext())
+			System.out.printf(ERROR_NO_ASSIGN_ENROL, courseName);
+		else {
+			professorsIT=evCalendar.listProfessorsInCourse(courseName);
+			studentsIT=evCalendar.listStudentsInCourse(courseName);
+			System.out.printf(HEADER_ROSTER, courseName);
 			System.out.println(HEADER_PROFESSORS);
-			while(itProfessors.hasNext()) {
-				person = itProfessors.next();
+			while(professorsIT.hasNext()) {
+				person = professorsIT.next();
 				System.out.println(person.getName());
 			}
 			System.out.println(HEADER_STUDENTS);
-			while(itStudents.hasNext()){
-				person = itStudents.next();
+			while(studentsIT.hasNext()){
+				person = studentsIT.next();
 				System.out.printf(LIST_STUDENT_W_NUMBER,((Student)person).getStudentNumber(),person.getName());
 			}
 		}
@@ -255,6 +273,7 @@ public class Main {
 		String currentStudent;
 		Array<String> studentName = new ArrayClass<>();
 
+		
 		for(int i = 0; i < numStudents; i++) { 
 			currentStudent = in.nextLine().trim();
 
@@ -262,7 +281,7 @@ public class Main {
 				System.out.printf(ERROR_STUDENT_NOT_EXIST, currentStudent);
 				enrolledStudents--;
 			}
-			else if(evCalendar.studentInCourse(currentStudent, courseName)) {
+			else if(evCalendar.existsCourse(courseName) && evCalendar.studentInCourse(currentStudent, courseName)) {
 				System.out.printf(ERROR_STUDENT_ALREADY_ENROLLED, currentStudent, courseName);
 				enrolledStudents--;
 			}
@@ -274,7 +293,7 @@ public class Main {
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
 			return;
 		}
-
+		
 		for(int i = 0; i < enrolledStudents; i++)
 			evCalendar.enrolStudentInCourse(studentName.get(i), courseName);
 
@@ -286,13 +305,14 @@ public class Main {
 		int i;
 		Array<String> coursesName = new ArrayClass<>();
 		Iterator<Person> studentsIT, professorsIT;
-		Person student, professor;
+		Person professor;
+		Student student;
 		
 		for(i = 0; i < numCourses; i++) 
 			coursesName.insertLast(in.nextLine().trim());
 
 		if(numCourses <= 1) {			
-			System.out.println(ERROR_INADEQUATE_NUM_STUDENTS);
+			System.out.println(ERROR_INADEQUATE_NUM_COURSES);
 			return;
 		}
 
@@ -310,6 +330,7 @@ public class Main {
 		if(!professorsIT.hasNext() && !studentsIT.hasNext())
 			System.out.println(ERROR_NO_ONE_TO_LIST);
 		else {
+			System.out.println(HEADER_INTERSECTION);
 			System.out.println(HEADER_PROFESSORS);
 			
 			while(professorsIT.hasNext()) {
@@ -319,8 +340,8 @@ public class Main {
 			
 			System.out.println(HEADER_STUDENTS);
 			while(studentsIT.hasNext()) {
-				student = studentsIT.next();
-				System.out.println(student.getName());
+				student = (Student) studentsIT.next();
+				System.out.printf(LIST_STUDENT_W_NUMBER, student.getStudentNumber(), ((Person) student).getName());
 			}		
 		}
 	}
