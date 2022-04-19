@@ -132,7 +132,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		}
 		professors=courses.get(0).getArrayOfProfessors();
 		for(int j=1;j<coursesName.size();j++){
-			result=intersectTwoArrays(professors,courses.get(j).getArrayOfProfessors());
+			professors=intersectTwoArrays(professors,courses.get(j).getArrayOfProfessors());
 		}
 		return professors.iterator();
 	}
