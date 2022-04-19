@@ -99,41 +99,34 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	@Override
 	public void assignProfessorToCourse(String professorName, String courseName) {
-		//Courses course = searchCourse(courseName);
-		//Person professor = searchPerson(professorName);
-		//course.addProfessor(professor);
-		//course.addProfessor(searchPerson(professorName));
 		searchCourse(courseName).addProfessor(searchPerson(professorName));
 	}
 
 	@Override
 	public void enrolStudentInCourse(String studentName, String courseName) {
-		Courses course = searchCourse(courseName);
-		//Person student = searchPerson(studentName);
-		//course.addStudent(student);	
 		searchCourse(courseName).addStudent(searchPerson(studentName));
 	}
 
 	@Override
 	public Iterator<Person> courseIntersectionStudents(Array<String> coursesName) {
-		Array<Courses> courses=null;
-		Array<Person> result;
+		Array<Courses> courses= new ArrayClass<>();
+		Array<Person> students = new ArrayClass<>();
+		
 		for(int i=0;i<coursesName.size();i++){
 			courses.insertLast(searchCourse(coursesName.get(i)));
 		}
-		result=courses.get(0).getArrayOfStudents();
-		for(int j=1;j<coursesName.size();j++){
-			result=intersectTwoArrays(result,courses.get(j).getArrayOfStudents()));
+		students = courses.get(0).getArrayOfStudents();
+		for(int j = 1; j < coursesName.size(); j++){
+			students = intersectTwoArrays(students, courses.get(j).getArrayOfStudents());
 		}
-		return result.iterator();
-		// TODO Auto-generated method stub
-		
+		return students.iterator();
 	}
 
 	@Override
 	public Iterator<Person> courseIntersectionProfessors(Array<String> coursesName) {
-		Array<Courses> courses=null;
-		Array<Person> result;
+		Array<Courses> courses = new ArrayClass<>();
+		Array<Person> result = new ArrayClass<>();
+		
 		for(int i=0;i<coursesName.size();i++){
 			courses.insertLast(searchCourse(coursesName.get(i)));
 		}
@@ -142,8 +135,33 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 			result=intersectTwoArrays(result,courses.get(j).getArrayOfProfessors());
 		}
 		return result.iterator();
-		// TODO Auto-generated method stub
-		
+	}
+
+	private Array<Person> intersectTwoArrays(Array<Person> firstArray, Array<Person> secondArray) {
+		Array<Person> result = new ArrayClass<>();
+	
+		for(int i = 0; i < firstArray.size(); i++) {
+			for(int j = 0; j < secondArray.size(); j++) {
+				if (firstArray.get(i).equals(secondArray.get(j))){
+					result.insertLast(firstArray.get(i));
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public boolean hasDeadlinesCourse(String courseName) {
+		if(searchCourse(courseName).getNumberOfDeadlines() > 0)
+			return true;
+		return false;
+	}
+
+	@Override
+	public Array<String> getCourseDealines(String courseName) {
+		searchCourse(courseName);//getdeadlines
+		return null;
 	}
 
 	@Override
@@ -164,18 +182,5 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	@Override
 	public Iterator<Person> listProfessorsInCourse(String courseName) {
 		return searchCourse(courseName).getListOfProfessorsCourse();
-	}
-
-	private Array<Person> intersectTwoArrays(Array<Person> firstArray, Array<Person> secondArray) {
-		Array<Person> result = null;
-		for(int i=0;i<firstArray.size();i++){
-			for(int j=0;j<secondArray.size();j++) {
-				if (firstArray.get(i).equals(secondArray.get(j))) {
-					result.insertLast(firstArray.get(i));
-					break;
-				}
-			}
-		}
-		return result;
 	}
 }
