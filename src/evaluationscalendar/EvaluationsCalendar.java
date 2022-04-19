@@ -87,6 +87,12 @@ public interface EvaluationsCalendar {
 	// not commented yet
 	Iterator<Person> courseIntersectionProfessors(Array<String> coursesName);
 
+	//not commented
+	boolean hasDeadlinesCourse(String courseName);
+
+	//not commented
+	Array<String> getCourseDealines(String courseName);
+
 	/**
 	 * Returns all the people registered in the system
 	 * @return Iterator of Person with everyone reigstered
