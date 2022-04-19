@@ -66,17 +66,20 @@ public class CoursesClass implements Courses {
 	}
 
 	@Override
-	public Iterator<Person> getListOfProfessorsCourse(){
+	public Iterator<Person> getListOfProfessorsCourse() {
 		return professors.iterator();
 	}
 
 	@Override
-	public Iterator<Person> getListOfStudentsCourse(){
+	public Iterator<Person> getListOfStudentsCourse() {
 		return students.iterator();
 	}
 
-	public Array<Person> getArrayOfStudents(){ return students; }
+	public Array<Person> getArrayOfStudents() { 
+		return students; 
+	}
 
-	public Array<Person> getArrayOfProfessors(){ return professors; }
-
+	public Array<Person> getArrayOfProfessors() { 
+		return professors; 
+	}
 }
