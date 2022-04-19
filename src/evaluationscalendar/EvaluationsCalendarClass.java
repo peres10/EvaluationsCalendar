@@ -125,16 +125,16 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	@Override
 	public Iterator<Person> courseIntersectionProfessors(Array<String> coursesName) {
 		Array<Courses> courses = new ArrayClass<>();
-		Array<Person> result = new ArrayClass<>();
+		Array<Person> professors = new ArrayClass<>();
 		
 		for(int i=0;i<coursesName.size();i++){
 			courses.insertLast(searchCourse(coursesName.get(i)));
 		}
-		result=courses.get(0).getArrayOfProfessors();
+		professors=courses.get(0).getArrayOfProfessors();
 		for(int j=1;j<coursesName.size();j++){
-			result=intersectTwoArrays(result,courses.get(j).getArrayOfProfessors());
+			result=intersectTwoArrays(professors,courses.get(j).getArrayOfProfessors());
 		}
-		return result.iterator();
+		return professors.iterator();
 	}
 
 	private Array<Person> intersectTwoArrays(Array<Person> firstArray, Array<Person> secondArray) {
