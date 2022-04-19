@@ -285,9 +285,9 @@ public class Main {
 		int numCourses = in.nextInt();
 		int i;
 		Array<String> coursesName = new ArrayClass<>();
-		Iterator<Person> students = new ArrayClass<>();
-		Iterator<Person> professors = new ArrayClass<>();
-
+		Iterator<Person> studentsIT, professorsIT;
+		Person student, professor;
+		
 		for(i = 0; i < numCourses; i++) 
 			coursesName.insertLast(in.nextLine().trim());
 
@@ -303,33 +303,42 @@ public class Main {
 			}
 		}
 
-		professors = evCalendar.courseIntersectionProfessors(coursesName);
-		students = evCalendar.courseIntersectionStudents(coursesName);
+		professorsIT = evCalendar.courseIntersectionProfessors(coursesName);
+		studentsIT = evCalendar.courseIntersectionStudents(coursesName);
 		
-		if(professors.size() == 0 && students.size() == 0)
+		
+		if(!professorsIT.hasNext() && !studentsIT.hasNext())
 			System.out.println(ERROR_NO_ONE_TO_LIST);
 		else {
 			System.out.println(HEADER_PROFESSORS);
-			for(i = 0; i < professors.size(); i++)
-				System.out.println(professors.get(i).getName());
-
+			
+			while(professorsIT.hasNext()) {
+				professor = professorsIT.next();
+				System.out.println(professor.getName());
+			}
+			
 			System.out.println(HEADER_STUDENTS);
-			for(i = 0; i < students.size(); i++)
-				System.out.println(students.get(i).getName());			
+			while(studentsIT.hasNext()) {
+				student = studentsIT.next();
+				System.out.println(student.getName());
+			}		
 		}
 	}
 
+
 	private static void courseDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
-		Courses course;
+		Array<String> deadlines = new ArrayClass<>();
+
 		if(!evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
 		else {
-			course = evCalendar.searchCourse(courseName);
-			if(course.getNumberOfDeadlines() == 0)
+			
+			if(!evCalendar.hasDeadlinesCourse(courseName))
 				System.out.printf(ERROR_NO_DEADLINE_DEFINED, courseName);
 			else {
-				for(int i = 0; i < course.getNumberOfDeadlines(); i++)	
+				deadlines = evCalendar.getCourseDealines(courseName);
+				for(int i = 0; i < deadlines.size(); i++)	
 					System.out.println(LIST_DEADLINE); //FALTA A DEADLINE E A DATA
 			}
 				
