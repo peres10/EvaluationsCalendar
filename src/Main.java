@@ -25,8 +25,7 @@ public class Main {
 	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
 	private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
 	private static final String LIST_DEADLINE_COURSE = "%s: %s\n";
-	//private static final String LIST_DEADLINE =
-	// private static final String LIST_PERSONAL_DEADLINES = ?
+    private static final String LIST_DEADLINE_STUDENT = "[%s] %s: %s\n";
 
 	//error and success messages
 	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands.\n";
@@ -38,6 +37,7 @@ public class Main {
 	private static final String ERROR_COURSE_NOT_EXIST = "Course %s does not exist!\n";
 	private static final String ERROR_PROFESSOR_NOT_EXIST = "Professor %s does not exist!\n";
 	private static final String ERROR_STUDENT_NOT_EXIST = "Student %s does not exist!\n";
+	private static final String ERROR_STUDENT_DEADLINE_NOT_EXIST = "%s does not exist!\n";
 	private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %s!\n";
 	private static final String ERROR_INADEQUATE_NUM_STUDENTS = "Inadequate number of students!";
 	private static final String ERROR_INADEQUATE_NUM_COURSES = "Inadequate number of courses!";
@@ -45,13 +45,13 @@ public class Main {
 	private static final String ERROR_NO_ASSIGN_ENROL = "Course %s has no assigned professors and no enrolled students.\n";
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
 	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s!\n";
-	private static final String ERROR_DEADLINE_EXISTS = "%s already exists!\n";
+	private static final String ERROR_DEADLINE_EXISTS = "Deadline %s already exists!\n";
 
 	private static final String PERSON_ADDED = "%s added.\n";
 	private static final String COURSE_ADDED = "Course %s added.\n";
 	private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
 	private static final String STUDENTS_ADDED_TO_COURSE = "%d students added to course %s.\n";
-	private static final String DEADLINE_ADDED_TO_COURSE = "Deadline %d-%d-%d added to %s\n";
+	private static final String DEADLINE_ADDED_TO_COURSE = "Deadline %d-%02d-%02d added to %s.\n";
 
 
 	private static final String EXIT_MSG = "Bye!";
@@ -363,7 +363,7 @@ public class Main {
 				System.out.printf(ERROR_NO_DEADLINE_DEFINED, courseName);
 			else {
 				deadlinesIt = evCalendar.listAllDeadlinesInACourse(courseName);
-				System.out.printf(HEADER_DEADLINES_STUDENT,courseName);
+				System.out.printf(HEADER_DEADLINES_COURSE,courseName);
 				while(deadlinesIt.hasNext()){
 					Deadline deadline= deadlinesIt.next();
 					System.out.printf(LIST_DEADLINE_COURSE,deadline.getName(),deadline.getDate().toString());
@@ -374,9 +374,28 @@ public class Main {
 	}
 
 	private static void personalDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub
-	
-	}
+        String personName = in.nextLine().trim();
+        Iterator<Deadline> deadlinesIT;
+        Deadline deadline;
+
+        if(!evCalendar.existPerson(personName))
+            System.out.printf(ERROR_STUDENT_DEADLINE_NOT_EXIST, personName);
+        else {
+            deadlinesIT = evCalendar.getPersonalDeadlines(personName);
+            
+            if(!deadlinesIT.hasNext())
+                System.out.printf(ERROR_NO_DEADLINE_DEFINED, personName);
+            else {
+                System.out.printf(HEADER_DEADLINES_STUDENT, personName);
+                while(deadlinesIT.hasNext()) { 
+                	deadline = deadlinesIT.next();
+                	  System.out.printf(LIST_DEADLINE_STUDENT, deadline.getDeadlineCourse(), deadline.getName(), deadline.getDate());	
+                }
+                  
+            }
+
+        }
+    }
 
 	private static void addDeadline(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName,deadlineName;
@@ -390,7 +409,7 @@ public class Main {
 			System.out.printf(ERROR_COURSE_NOT_EXIST,courseName);
 		else{
 			if(evCalendar.hasDeadlineInCourse(courseName,deadlineName))
-				System.out.printf(ERROR_DEADLINE_EXISTS,courseName);
+				System.out.printf(ERROR_DEADLINE_EXISTS,deadlineName);
 			else{
 				evCalendar.addDeadlineCourse(courseName,deadlineName,year,month,day);
 				System.out.printf(DEADLINE_ADDED_TO_COURSE,year,month,day,courseName);

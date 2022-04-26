@@ -189,12 +189,6 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return course.hasDeadline(deadlineName);
 	}
 
-	/*@Override
-	public Array<String> getPersonalDeadlines(String studentName) {
-		getCoursesStudent(searchPerson(studentName));
-		return null;
-	}*/
-
 	private void getCoursesStudent(Person student) {
 		Iterator<Courses> coursesIT = listAllCourses();
 		Courses course;
@@ -214,5 +208,30 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	public void addDeadlineCourse(String courseName, String deadlineName,int year, int month, int day){
 		Courses course = searchCourse(courseName);
 		course.addDeadline(year,month,day,deadlineName);
+	}
+
+	@Override
+	public Iterator<Deadline> getPersonalDeadlines(String personName) {
+		Iterator<Courses> coursesIT = listAllCourses();
+		Iterator<Deadline> deadlinesIT;
+		Courses course;
+		Array<Deadline> deadlines = new  ArrayClass<>();
+		Array<Deadline> deadlinesAux;
+		
+		while(coursesIT.hasNext()) {
+            course = coursesIT.next();
+            if(studentInCourse(personName, course.getName())) {
+                deadlinesIT = listAllDeadlinesInACourse(course.getName());
+                while(deadlinesIT.hasNext())
+                    deadlines.insertLast(deadlinesIT.next());
+            }
+            else if(professorInCourse(personName, course.getName())) {
+            	deadlinesIT = listAllDeadlinesInACourse(course.getName());
+                while(deadlinesIT.hasNext())
+                	deadlines.insertLast(deadlinesIT.next());      	
+            }
+		}
+		deadlinesAux = deadlines.sort();
+		return deadlinesAux.iterator();
 	}
 }

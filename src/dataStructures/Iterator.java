@@ -4,7 +4,7 @@ public interface Iterator<E> {
 	/**
 	 * Vai para o inicio da coleccao de elementos
 	 */
-	void init();
+	void rewind();
 	
 	/**
 	 * Devolve <code>true</code> se existirem mais elementos a visitar, 

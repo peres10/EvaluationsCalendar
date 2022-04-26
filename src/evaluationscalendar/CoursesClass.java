@@ -38,6 +38,8 @@ public class CoursesClass implements Courses {
 	@Override
 	public void addDeadline(int year,int month,int day,String name) {
 		deadlines.insertLast(new DeadlineClass(year,month,day,name,this.courseName));
+		Array<Deadline> deadlinesAux = deadlines.sort();
+		deadlines = deadlinesAux;
 	}
 	
 	@Override
@@ -90,7 +92,7 @@ public class CoursesClass implements Courses {
 		Deadline deadline;
 		while(deadlineIt.hasNext()) {
 			deadline = deadlineIt.next();
-			if(deadline.getName().equals(courseName))
+			if(deadline.getName().equals(deadlineName))
 				return deadline;
 		}
 		return null;

@@ -8,10 +8,10 @@ public class ArrayIterator<E> implements Iterator<E>{
 	public ArrayIterator(E[] elems, int counter) {
 		this.elems = elems;
 		this.counter = counter;
-		init();
+		rewind();
 	}
 
-	public void init() {
+	public void rewind() {
 		current = 0;
 	}
 

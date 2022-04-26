@@ -1,6 +1,6 @@
 package dataStructures;
 
-public interface Array<E>{
+public interface Array<E> {
 	
 	/**
 	 * Insere o elemento <code>e</code> na ultima posicao do vector
@@ -69,8 +69,13 @@ public interface Array<E>{
 
 	/**
 	 * Devolve um iterador os elementos do vector
-	 * @return iterador para os elmentos 
+	 * @return iterador para os elementos 
 	 */
 	Iterator<E> iterator();
-
+	
+	/**
+	 * Devolve uma cópia do array com os elementos ordenados
+	 * @return array ordenado
+	 */
+	Array<E> sort();
 }

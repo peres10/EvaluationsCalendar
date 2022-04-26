@@ -22,5 +22,14 @@ public class DeadlineClass implements Deadline{
 
     @Override
     public String getDeadlineCourse() { return courseName; }
+
+	@Override
+	public int compareTo(Deadline o) {
+		if(this.date.isBefore(o.getDate()))
+			return -1;
+		else if(this.date.isAfter(o.getDate()))
+			return 1;
+		return 0;
+	}
 }
 
