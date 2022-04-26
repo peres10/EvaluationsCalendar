@@ -6,5 +6,6 @@ public interface Deadline {
 
     String getName();
     LocalDate getDate();
+    String getDeadlineCourse();
 
 }

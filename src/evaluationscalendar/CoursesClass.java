@@ -37,7 +37,7 @@ public class CoursesClass implements Courses {
 
 	@Override
 	public void addDeadline(int year,int month,int day,String name) {
-		deadlines.insertLast(new DeadlineClass(year,month,day,name));
+		deadlines.insertLast(new DeadlineClass(year,month,day,name,this.courseName));
 	}
 	
 	@Override
