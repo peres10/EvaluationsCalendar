@@ -91,7 +91,7 @@ public interface EvaluationsCalendar {
 	boolean hasDeadlinesCourse(String courseName);
 
 	//not commented
-	Array<String> getCourseDealines(String courseName);
+	Array<Deadline> getCourseDeadlines(String courseName);
 
 	/**
 	 * Returns all the people registered in the system
@@ -119,4 +119,9 @@ public interface EvaluationsCalendar {
 	 */
 	Iterator<Person> listProfessorsInCourse(String courseName);
 
+	Iterator<Deadline> listAllDeadlinesInACourse(String courseName);
+
+	boolean hasDeadlineInCourse(String courseName, String deadlineName);
+
+	void addDeadlineCourse(String courseName, String deadlineName,int year, int month, int day);
 }

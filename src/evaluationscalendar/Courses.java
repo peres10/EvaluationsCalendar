@@ -25,7 +25,7 @@ public interface Courses {
 	void addTest();
 
 	//not commented yet
-	void addDeadline();
+	void addDeadline(int year,int month,int day,String name);
 
 	/**
 	 * Gets the name of a course
@@ -66,4 +66,8 @@ public interface Courses {
 	Array<Person> getArrayOfProfessors();
 
 	Array<Person> getArrayOfStudents();
+
+	boolean hasDeadline(String deadlineName);
+
+	Iterator<Deadline> getListOfDeadlinesCourse();
 }

@@ -159,7 +159,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	}
 
 	@Override
-	public Array<String> getCourseDealines(String courseName) {
+	public Array<Deadline> getCourseDeadlines(String courseName) {
 		searchCourse(courseName);//getdeadlines
 		return null;
 	}
@@ -182,5 +182,37 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	@Override
 	public Iterator<Person> listProfessorsInCourse(String courseName) {
 		return searchCourse(courseName).getListOfProfessorsCourse();
+	}
+
+	public boolean hasDeadlineInCourse(String courseName, String deadlineName){
+		Courses course=searchCourse(courseName);
+		return course.hasDeadline(deadlineName);
+	}
+
+	/*@Override
+	public Array<String> getPersonalDeadlines(String studentName) {
+		getCoursesStudent(searchPerson(studentName));
+		return null;
+	}*/
+
+	private void getCoursesStudent(Person student) {
+		Iterator<Courses> coursesIT = listAllCourses();
+		Courses course;
+		Array<Deadline> deadlines = new ArrayClass<>();
+		while(coursesIT.hasNext()) {
+			course = coursesIT.next();
+			if(studentInCourse(student.getName(),course.getName()))
+				return;//deadlines.insertLast(getCourseDeadlines(course.getName()));
+		}
+
+	}
+
+	public Iterator<Deadline> listAllDeadlinesInACourse(String courseName) {
+		return searchCourse(courseName).getListOfDeadlinesCourse();
+	}
+
+	public void addDeadlineCourse(String courseName, String deadlineName,int year, int month, int day){
+		Courses course = searchCourse(courseName);
+		course.addDeadline(year,month,day,deadlineName);
 	}
 }

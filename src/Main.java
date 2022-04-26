@@ -18,12 +18,14 @@ public class Main {
 	private static final String HEADER_ALL_COURSES = "All courses:";
 	private static final String HEADER_ROSTER = "Roster for course %s:\n";
 	private static final String HEADER_INTERSECTION = "Intersection:";
+	private static final String HEADER_DEADLINES_COURSE = "Deadlines for course %s:\n";
+	private static final String HEADER_DEADLINES_STUDENT = "Deadlines for %s:\n";
 	private static final String LIST_STUDENT_FORMAT = "[%d] %s (%d)\n";
 	private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
 	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
 	private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
-	private static final String LIST_DEADLINE = "%s: %s\n";
-	// private static final String LIST_DEADLINE = ?
+	private static final String LIST_DEADLINE_COURSE = "%s: %s\n";
+	//private static final String LIST_DEADLINE =
 	// private static final String LIST_PERSONAL_DEADLINES = ?
 
 	//error and success messages
@@ -43,11 +45,13 @@ public class Main {
 	private static final String ERROR_NO_ASSIGN_ENROL = "Course %s has no assigned professors and no enrolled students.\n";
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
 	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s!\n";
+	private static final String ERROR_DEADLINE_EXISTS = "%s already exists!\n";
 
 	private static final String PERSON_ADDED = "%s added.\n";
 	private static final String COURSE_ADDED = "Course %s added.\n";
 	private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
 	private static final String STUDENTS_ADDED_TO_COURSE = "%d students added to course %s.\n";
+	private static final String DEADLINE_ADDED_TO_COURSE = "Deadline %d-%d-%d added to %s\n";
 
 
 	private static final String EXIT_MSG = "Bye!";
@@ -349,7 +353,7 @@ public class Main {
 
 	private static void courseDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
-		Array<String> deadlines = new ArrayClass<>();
+		Iterator<Deadline> deadlinesIt;
 
 		if(!evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
@@ -358,9 +362,12 @@ public class Main {
 			if(!evCalendar.hasDeadlinesCourse(courseName))
 				System.out.printf(ERROR_NO_DEADLINE_DEFINED, courseName);
 			else {
-				deadlines = evCalendar.getCourseDealines(courseName);
-				for(int i = 0; i < deadlines.size(); i++)	
-					System.out.println(LIST_DEADLINE); //FALTA A DEADLINE E A DATA
+				deadlinesIt = evCalendar.listAllDeadlinesInACourse(courseName);
+				System.out.printf(HEADER_DEADLINES_STUDENT,courseName);
+				while(deadlinesIt.hasNext()){
+					Deadline deadline= deadlinesIt.next();
+					System.out.printf(LIST_DEADLINE_COURSE,deadline.getName(),deadline.getDate().toString());
+				}
 			}
 				
 		}
@@ -372,8 +379,23 @@ public class Main {
 	}
 
 	private static void addDeadline(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub
-	
+		String courseName,deadlineName;
+		int year,month,day;
+		courseName = in.nextLine().trim();
+		year=in.nextInt();
+		month=in.nextInt();
+		day=in.nextInt();
+		deadlineName=in.nextLine().trim();
+		if(!evCalendar.existsCourse(courseName))
+			System.out.printf(ERROR_COURSE_NOT_EXIST,courseName);
+		else{
+			if(evCalendar.hasDeadlineInCourse(courseName,deadlineName))
+				System.out.printf(ERROR_DEADLINE_EXISTS,courseName);
+			else{
+				evCalendar.addDeadlineCourse(courseName,deadlineName,year,month,day);
+				System.out.printf(DEADLINE_ADDED_TO_COURSE,year,month,day,courseName);
+			}
+		}
 	}
 
 	private static void courseTests(EvaluationsCalendar evCalendar, Scanner in) {

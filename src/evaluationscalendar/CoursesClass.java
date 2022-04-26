@@ -3,19 +3,19 @@ package evaluationscalendar;
 import dataStructures.*;
 
 public class CoursesClass implements Courses {
-	private String courseName;
+	private final String courseName;
 	private int numberOfTests;
-	private int numberOfDeadlines;
 
 	private Array<Person> professors;
 	private Array<Person> students;
+	private Array<Deadline> deadlines;
 
 	public CoursesClass(String courseName) {
 		this.courseName = courseName;
 		professors = new ArrayClass<>();
 		students = new ArrayClass<>();
-		this.numberOfTests = 0;
-		this.numberOfDeadlines = 0;
+		//tests = new ArrayClass<>();
+		deadlines = new ArrayClass<>();
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class CoursesClass implements Courses {
 	}
 
 	@Override
-	public void addDeadline() {
-		this.numberOfDeadlines++;
+	public void addDeadline(int year,int month,int day,String name) {
+		deadlines.insertLast(new DeadlineClass(year,month,day,name));
 	}
 	
 	@Override
@@ -57,12 +57,12 @@ public class CoursesClass implements Courses {
 
 	@Override
 	public int getNumberOfTests() {
-		return this.numberOfTests;
+		return 0;//tests.size();
 	}
 
 	@Override
 	public int getNumberOfDeadlines() {
-		return this.numberOfDeadlines;
+		return deadlines.size();
 	}
 
 	@Override
@@ -81,5 +81,22 @@ public class CoursesClass implements Courses {
 
 	public Array<Person> getArrayOfProfessors() { 
 		return professors; 
+	}
+
+	public Iterator<Deadline> getListOfDeadlinesCourse() { return deadlines.iterator(); }
+
+	private Deadline searchDeadline(String deadlineName) {
+		Iterator<Deadline> deadlineIt = getListOfDeadlinesCourse();
+		Deadline deadline;
+		while(deadlineIt.hasNext()) {
+			deadline = deadlineIt.next();
+			if(deadline.getName().equals(courseName))
+				return deadline;
+		}
+		return null;
+	}
+
+	 public boolean hasDeadline(String deadlineName){
+		return searchDeadline(deadlineName) != null;
 	}
 }
