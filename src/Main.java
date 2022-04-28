@@ -46,6 +46,7 @@ public class Main {
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
 	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s!\n";
 	private static final String ERROR_DEADLINE_EXISTS = "Deadline %s already exists!\n";
+	private static final String ERROR_TEST_EXISTS = ""
 
 	private static final String PERSON_ADDED = "%s added.\n";
 	private static final String COURSE_ADDED = "Course %s added.\n";
@@ -428,8 +429,26 @@ public class Main {
 	}
 
 	private static void addTest(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub
-	
+		String courseName,testName;
+		int year,month,day,hour,minutes,duration;
+		year=in.nextInt();
+		month=in.nextInt();
+		day=in.nextInt();
+		hour=in.nextInt();
+		minutes=in.nextInt();
+		duration=in.nextInt();
+		courseName=in.nextLine().trim();
+		testName=in.nextLine().trim();
+		if(!evCalendar.existsCourse(courseName))
+			System.out.printf(ERROR_COURSE_NOT_EXIST,courseName);
+		else{
+			if(evCalendar.hasTestInCourse(courseName,testNameName))
+				System.out.printf(ERROR_DEADLINE_EXISTS,deadlineName);
+			else{
+				evCalendar.addDeadlineCourse(courseName,deadlineName,year,month,day);
+				System.out.printf(DEADLINE_ADDED_TO_COURSE,year,month,day,courseName);
+			}
+		}*/
 	}
 
 	private static void superProfessor(EvaluationsCalendar evCalendar) {

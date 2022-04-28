@@ -213,7 +213,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	@Override
 	public Iterator<Deadline> getPersonalDeadlines(String personName) {
 		Iterator<Courses> coursesIT = listAllCourses();
-		Iterator<Deadline> deadlinesIT;
+		Iterator<Deadline> deadlinesIT = null;
 		Courses course;
 		Array<Deadline> deadlines = new  ArrayClass<>();
 		Array<Deadline> deadlinesAux;
@@ -221,17 +221,26 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		while(coursesIT.hasNext()) {
             course = coursesIT.next();
             if(studentInCourse(personName, course.getName())) {
-                deadlinesIT = listAllDeadlinesInACourse(course.getName());
-                while(deadlinesIT.hasNext())
-                    deadlines.insertLast(deadlinesIT.next());
+                addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
+				//deadlinesIT = listAllDeadlinesInACourse(course.getName());
+                //while(deadlinesIT.hasNext())
+                //    deadlines.insertLast(deadlinesIT.next());
             }
             else if(professorInCourse(personName, course.getName())) {
-            	deadlinesIT = listAllDeadlinesInACourse(course.getName());
-                while(deadlinesIT.hasNext())
-                	deadlines.insertLast(deadlinesIT.next());      	
+				addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
+            	//deadlinesIT = listAllDeadlinesInACourse(course.getName());
+                //while(deadlinesIT.hasNext())
+                //	deadlines.insertLast(deadlinesIT.next());
             }
 		}
 		deadlinesAux = deadlines.sort();
 		return deadlinesAux.iterator();
 	}
+
+	private void addDeadlineToDeadlineArray(Iterator <Deadline> deadlinesIT,String courseName,Array<Deadline> deadlines){
+		deadlinesIT = listAllDeadlinesInACourse(courseName);
+		while(deadlinesIT.hasNext())
+			deadlines.insertLast(deadlinesIT.next());
+	}
+
 }
