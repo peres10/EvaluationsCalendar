@@ -9,12 +9,13 @@ public class CoursesClass implements Courses {
 	private Array<Person> professors;
 	private Array<Person> students;
 	private Array<Deadline> deadlines;
-
+	private Array<CourseTests> tests;
+	
 	public CoursesClass(String courseName) {
 		this.courseName = courseName;
 		professors = new ArrayClass<>();
 		students = new ArrayClass<>();
-		//tests = new ArrayClass<>();
+		tests = new ArrayClass<>();
 		deadlines = new ArrayClass<>();
 	}
 
@@ -100,5 +101,10 @@ public class CoursesClass implements Courses {
 
 	 public boolean hasDeadline(String deadlineName){
 		return searchDeadline(deadlineName) != null;
+	}
+
+	@Override
+	public Iterator<CourseTests> getListOfTestsCourse() {
+		return tests.iterator();
 	}
 }

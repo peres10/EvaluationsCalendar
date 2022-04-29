@@ -70,4 +70,6 @@ public interface Courses {
 	boolean hasDeadline(String deadlineName);
 
 	Iterator<Deadline> getListOfDeadlinesCourse();
+
+	Iterator<CourseTests> getListOfTestsCourse();
 }

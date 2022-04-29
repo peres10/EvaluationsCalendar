@@ -126,4 +126,14 @@ public interface EvaluationsCalendar {
 	void addDeadlineCourse(String courseName, String deadlineName,int year, int month, int day);
 
 	Iterator<Deadline> getPersonalDeadlines(String studentName);
+
+	boolean hasTestsCourse(String courseName);
+
+	Iterator<CourseTests> listAllTestsInACourse(String courseName);
+
+	Iterator<CourseTests> getPersonalTests(String personName);
+
+	Person superProfessor();
+
+	int getSuperProfessorStudents();
 }

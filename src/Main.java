@@ -20,14 +20,19 @@ public class Main {
 	private static final String HEADER_INTERSECTION = "Intersection:";
 	private static final String HEADER_DEADLINES_COURSE = "Deadlines for course %s:\n";
 	private static final String HEADER_DEADLINES_STUDENT = "Deadlines for %s:\n";
+	private static final String HEADER_TESTS_COURSE = "Tests for couse %s:\n";
+	private static final String HEADER_TESTS_STUDENT = "Tests for %s:\n";
 	private static final String LIST_STUDENT_FORMAT = "[%d] %s (%d)\n";
 	private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
 	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
 	private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
 	private static final String LIST_DEADLINE_COURSE = "%s: %s\n";
     private static final String LIST_DEADLINE_STUDENT = "[%s] %s: %s\n";
+    private static final String LIST_TEST_COURSE = "%s-%s: %s\n";
+    private static final String LIST_TEST_STUDENT = "%s %s-%s: %s - %s\n";
+    private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
 
-	//error and success messages
+    //error and success messages
 	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands.\n";
 	private static final String ERROR_EMPTY_DATABASE = "No people registered!";
 	private static final String ERROR_ALREADY_EXIST_PERSON = "%s already exists!\n";
@@ -45,9 +50,11 @@ public class Main {
 	private static final String ERROR_NO_ASSIGN_ENROL = "Course %s has no assigned professors and no enrolled students.\n";
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
 	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s!\n";
+	private static final String ERROR_NO_TEST_SCHEDULED = "No scheduled tests for %s!\n";
 	private static final String ERROR_DEADLINE_EXISTS = "Deadline %s already exists!\n";
-	private static final String ERROR_TEST_EXISTS = ""
-
+	private static final String ERROR_TEST_EXISTS = "";
+	private static final String ERROR_NO_PROFESSORS = "There are no professors!";
+	
 	private static final String PERSON_ADDED = "%s added.\n";
 	private static final String COURSE_ADDED = "Course %s added.\n";
 	private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
@@ -419,17 +426,49 @@ public class Main {
 	}
 
 	private static void courseTests(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub
-	
+		String courseName = in.nextLine().trim();
+		Iterator<CourseTests> testsIT;
+		
+		if(!evCalendar.existsCourse(courseName))
+			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
+		else {
+			if(!evCalendar.hasTestsCourse(courseName))
+				System.out.println(ERROR_NO_TEST_SCHEDULED);
+			else {
+				testsIT = evCalendar.listAllTestsInACourse(courseName);
+				System.out.printf(HEADER_TESTS_COURSE, courseName);
+				while(testsIT.hasNext()) {
+					CourseTests test = testsIT.next();
+					System.out.printf(LIST_TEST_COURSE, test.getDateHours(), test.getTestEnding(), test.getName());
+				}		
+			}	
+		}	
 	}
 
 	private static void personalTests(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub
-	
+		String personName = in.nextLine().trim();
+        Iterator<CourseTests> testsIT;
+        CourseTests test;
+
+        if(!evCalendar.existPerson(personName))
+            System.out.printf(ERROR_STUDENT_NOT_EXIST, personName);
+        else {
+            testsIT = evCalendar.getPersonalTests(personName);
+            
+            if(!testsIT.hasNext())
+                System.out.printf(ERROR_NO_TEST_SCHEDULED, personName);
+            else {
+                System.out.printf(HEADER_TESTS_STUDENT, personName);
+                while(testsIT.hasNext()) { 
+                	test = testsIT.next();
+                	  System.out.printf(LIST_TEST_STUDENT, test.getDateHours(), test.getTestEnding(), test.getTestCourse(), test.getName());	
+                }     
+            }
+        }
 	}
 
 	private static void addTest(EvaluationsCalendar evCalendar, Scanner in) {
-		String courseName,testName;
+/*		String courseName,testName;
 		int year,month,day,hour,minutes,duration;
 		year=in.nextInt();
 		month=in.nextInt();
@@ -452,8 +491,13 @@ public class Main {
 	}
 
 	private static void superProfessor(EvaluationsCalendar evCalendar) {
-		// TODO Auto-generated method stub
-	
+		Person superProfessor = evCalendar.superProfessor();
+		int superProfessorStudents = evCalendar.getSuperProfessorStudents();
+		
+		if(!evCalendar.existPerson(superProfessor.getName()))
+			System.out.println(ERROR_NO_PROFESSORS);
+		else
+			System.out.printf(LIST_SUPERPROFESSOR, superProfessor.getName(), superProfessorStudents);
 	}
 
 	private static void stressometer(EvaluationsCalendar evCalendar, Scanner in) {

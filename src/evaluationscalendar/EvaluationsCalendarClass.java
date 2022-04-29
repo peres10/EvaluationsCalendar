@@ -5,6 +5,8 @@ import dataStructures.*;
 public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	private Array<Person> people;
 	private Array<Courses> courses;
+	private int superProfessorStudents;
+	
 	public EvaluationsCalendarClass() {
 		people = new ArrayClass<>();
 		courses = new ArrayClass<>();
@@ -159,6 +161,13 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	}
 
 	@Override
+	public boolean hasTestsCourse(String courseName) {
+		if(searchCourse(courseName).getNumberOfTests() > 0)
+			return true;
+		return false;
+	}
+
+	@Override
 	public Array<Deadline> getCourseDeadlines(String courseName) {
 		searchCourse(courseName);//getdeadlines
 		return null;
@@ -205,6 +214,11 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return searchCourse(courseName).getListOfDeadlinesCourse();
 	}
 
+	@Override
+	public Iterator<CourseTests> listAllTestsInACourse(String courseName) {
+		return searchCourse(courseName).getListOfTestsCourse();
+	}
+
 	public void addDeadlineCourse(String courseName, String deadlineName,int year, int month, int day){
 		Courses course = searchCourse(courseName);
 		course.addDeadline(year,month,day,deadlineName);
@@ -220,18 +234,11 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		
 		while(coursesIT.hasNext()) {
             course = coursesIT.next();
-            if(studentInCourse(personName, course.getName())) {
+            if(studentInCourse(personName, course.getName())) 
                 addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
-				//deadlinesIT = listAllDeadlinesInACourse(course.getName());
-                //while(deadlinesIT.hasNext())
-                //    deadlines.insertLast(deadlinesIT.next());
-            }
-            else if(professorInCourse(personName, course.getName())) {
+            else if(professorInCourse(personName, course.getName())) 
 				addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
-            	//deadlinesIT = listAllDeadlinesInACourse(course.getName());
-                //while(deadlinesIT.hasNext())
-                //	deadlines.insertLast(deadlinesIT.next());
-            }
+            
 		}
 		deadlinesAux = deadlines.sort();
 		return deadlinesAux.iterator();
@@ -241,6 +248,96 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		deadlinesIT = listAllDeadlinesInACourse(courseName);
 		while(deadlinesIT.hasNext())
 			deadlines.insertLast(deadlinesIT.next());
+	}
+
+	@Override
+	public Iterator<CourseTests> getPersonalTests(String personName) {
+		Iterator<Courses> coursesIT = listAllCourses();
+		Iterator<CourseTests> testsIT = null;
+		Courses course;
+		Array<CourseTests> tests = new  ArrayClass<>();
+		Array<CourseTests> testsAux;
+		
+		while(coursesIT.hasNext()) {
+            course = coursesIT.next();
+            if(studentInCourse(personName, course.getName())) 
+                addTestToTestArray(testsIT,course.getName(),tests);
+            else if(professorInCourse(personName, course.getName())) 
+				addTestToTestArray(testsIT,course.getName(),tests);
+            
+		}
+		testsAux = tests.sort();
+		return testsAux.iterator();
+
+	}
+
+	private void addTestToTestArray(Iterator<CourseTests> testsIT, String courseName, Array<CourseTests> tests) {
+		testsIT = listAllTestsInACourse(courseName);
+		while(testsIT.hasNext())
+			tests.insertLast(testsIT.next());		
+	}
+
+	@Override
+	public Person superProfessor() {
+		Iterator<Courses> coursesIT = listAllCourses();
+		Iterator<Person> professorsIT;
+		Courses course;
+		Person professor;
+		Array<Person> professors = new ArrayClass<>();
+		Array<Integer> numOfStudentsPerProfessor = new ArrayClass<>();
+		int i = 0, numOfStudents = 0;
+		
+		while(coursesIT.hasNext()) {
+			course = coursesIT.next();
+			professorsIT = listProfessorsInCourse(course.getName());
+			
+			while(professorsIT.hasNext()) {
+				professor = professorsIT.next();
+				if(!isProfessorInArray(professor, professors)) {
+					professors.insertLast(professor);
+					numOfStudentsPerProfessor.insertLast(course.getNumberOfStudents());
+				}
+				else {
+					i = getProfessorArrayIndex(professor, professors);
+					numOfStudents = numOfStudentsPerProfessor.get(i) + course.getNumberOfStudents();
+					numOfStudentsPerProfessor.insertAt(numOfStudents, i);
+				}
+			}
+		}	
+		return professors.get(getMostStudentsIndex(numOfStudentsPerProfessor));
+	}
+
+	private int getMostStudentsIndex(Array<Integer> numOfStudentsPerProfessor) {
+		int highestValue = 0;
+		int highestValueIndex = 0;
+		for(int i = 0; i < numOfStudentsPerProfessor.size(); i++) {
+			if(numOfStudentsPerProfessor.get(i) > highestValue) {
+				highestValue = numOfStudentsPerProfessor.get(i);
+				highestValueIndex = i;
+			}
+		}
+		this.superProfessorStudents = highestValue;
+		return highestValueIndex;
+	}
+
+	private int getProfessorArrayIndex(Person professor, Array<Person> professors) {
+		for(int i = 0; i < professors.size(); i++) {
+			if(professors.get(i).getName().equals(professor.getName()))
+				return i;
+		}
+		return 0;
+	}
+
+	private boolean isProfessorInArray(Person professor, Array<Person> professors) {
+		for(int i = 0; i < professors.size(); i++) {
+			if(professors.get(i).getName().equals(professor.getName()))
+				return true;
+		}
+		return false;		
+	}
+	
+	public int getSuperProfessorStudents() {
+		return this.superProfessorStudents;
 	}
 
 }
