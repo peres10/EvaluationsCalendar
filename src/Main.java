@@ -494,7 +494,7 @@ public class Main {
 		Person superProfessor = evCalendar.superProfessor();
 		int superProfessorStudents = evCalendar.getSuperProfessorStudents();
 		
-		if(!evCalendar.existPerson(superProfessor.getName()))
+		if(superProfessor == null)
 			System.out.println(ERROR_NO_PROFESSORS);
 		else
 			System.out.printf(LIST_SUPERPROFESSOR, superProfessor.getName(), superProfessorStudents);

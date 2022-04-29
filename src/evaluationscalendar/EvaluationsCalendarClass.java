@@ -285,7 +285,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		Person professor;
 		Array<Person> professors = new ArrayClass<>();
 		Array<Integer> numOfStudentsPerProfessor = new ArrayClass<>();
-		int i = 0, numOfStudents = 0;
+		int i = 0, numOfStudents = 0, mostStudentsIndex = 0;
 		
 		while(coursesIT.hasNext()) {
 			course = coursesIT.next();
@@ -304,16 +304,46 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				}
 			}
 		}	
-		return professors.get(getMostStudentsIndex(numOfStudentsPerProfessor));
+		
+		
+		
+		if(professors.size() == 0 || numOfStudentsPerProfessor.get(mostStudentsIndex) == 0) {
+			Iterator<Person> personIT = listAllPeople();
+			Person person;
+			while(personIT.hasNext()) {
+				person = personIT.next();
+				if(person instanceof ProfessorClass)
+					return person;
+			}
+				
+		}
+		
+		mostStudentsIndex = getMostStudentsIndex(numOfStudentsPerProfessor, professors);
+		return professors.get(mostStudentsIndex);
+		
 	}
 
-	private int getMostStudentsIndex(Array<Integer> numOfStudentsPerProfessor) {
+	private int getMostStudentsIndex(Array<Integer> numOfStudentsPerProfessor, Array<Person> professors) {
 		int highestValue = 0;
 		int highestValueIndex = 0;
+		int firstTaken = 0;
+		
 		for(int i = 0; i < numOfStudentsPerProfessor.size(); i++) {
+			
 			if(numOfStudentsPerProfessor.get(i) > highestValue) {
 				highestValue = numOfStudentsPerProfessor.get(i);
 				highestValueIndex = i;
+			}
+			else if(numOfStudentsPerProfessor.get(i) == highestValue) {
+				Iterator<Person> personIT = listAllPeople();
+				Person person;
+				while(personIT.hasNext()) {
+					person = personIT.next();
+					if(person.getName() == professors.get(i).getName() && firstTaken == 0){
+						highestValueIndex = i;
+						firstTaken = 1;
+					}
+				}		
 			}
 		}
 		this.superProfessorStudents = highestValue;
