@@ -300,12 +300,14 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				else {
 					i = getProfessorArrayIndex(professor, professors);
 					numOfStudents = numOfStudentsPerProfessor.get(i) + course.getNumberOfStudents();
+					numOfStudentsPerProfessor.removeAt(i);
 					numOfStudentsPerProfessor.insertAt(numOfStudents, i);
 				}
 			}
 		}	
 		
 		
+		mostStudentsIndex = getMostStudentsIndex(numOfStudentsPerProfessor, professors);
 		
 		if(professors.size() == 0 || numOfStudentsPerProfessor.get(mostStudentsIndex) == 0) {
 			Iterator<Person> personIT = listAllPeople();
@@ -318,7 +320,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				
 		}
 		
-		mostStudentsIndex = getMostStudentsIndex(numOfStudentsPerProfessor, professors);
+		
 		return professors.get(mostStudentsIndex);
 		
 	}
@@ -326,7 +328,6 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	private int getMostStudentsIndex(Array<Integer> numOfStudentsPerProfessor, Array<Person> professors) {
 		int highestValue = 0;
 		int highestValueIndex = 0;
-		int firstTaken = 0;
 		
 		for(int i = 0; i < numOfStudentsPerProfessor.size(); i++) {
 			
@@ -335,19 +336,24 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				highestValueIndex = i;
 			}
 			else if(numOfStudentsPerProfessor.get(i) == highestValue) {
-				Iterator<Person> personIT = listAllPeople();
-				Person person;
-				while(personIT.hasNext()) {
-					person = personIT.next();
-					if(person.getName() == professors.get(i).getName() && firstTaken == 0){
-						highestValueIndex = i;
-						firstTaken = 1;
-					}
-				}		
+				highestValueIndex = whoIsFirstProfessor(professors, highestValueIndex, i);		
 			}
 		}
 		this.superProfessorStudents = highestValue;
 		return highestValueIndex;
+	}
+
+	private int whoIsFirstProfessor(Array<Person> professors, int highestValueIndex, int i) {	
+		
+			Iterator<Person> personIT = listAllPeople();
+			Person person;
+			while(personIT.hasNext()) {
+				person = personIT.next();
+				if(person.getName().equals(professors.get(i).getName()))
+					return i;
+					
+			}
+			return highestValueIndex;
 	}
 
 	private int getProfessorArrayIndex(Person professor, Array<Person> professors) {
