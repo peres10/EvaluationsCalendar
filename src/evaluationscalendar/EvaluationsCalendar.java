@@ -135,5 +135,4 @@ public interface EvaluationsCalendar {
 
 	Person superProfessor();
 
-	int getSuperProfessorStudents();
 }

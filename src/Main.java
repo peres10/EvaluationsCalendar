@@ -358,7 +358,6 @@ public class Main {
 		}
 	}
 
-
 	private static void courseDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
 		Iterator<Deadline> deadlinesIt;
@@ -376,8 +375,7 @@ public class Main {
 					Deadline deadline= deadlinesIt.next();
 					System.out.printf(LIST_DEADLINE_COURSE,deadline.getName(),deadline.getDate().toString());
 				}
-			}
-				
+			}	
 		}
 	}
 
@@ -397,11 +395,9 @@ public class Main {
                 System.out.printf(HEADER_DEADLINES_STUDENT, personName);
                 while(deadlinesIT.hasNext()) { 
                 	deadline = deadlinesIT.next();
-                	  System.out.printf(LIST_DEADLINE_STUDENT, deadline.getDeadlineCourse(), deadline.getName(), deadline.getDate());	
-                }
-                  
+                	System.out.printf(LIST_DEADLINE_STUDENT, deadline.getDeadlineCourse(), deadline.getName(), deadline.getDate());	
+                }     
             }
-
         }
     }
 
@@ -492,12 +488,11 @@ public class Main {
 
 	private static void superProfessor(EvaluationsCalendar evCalendar) {
 		Person superProfessor = evCalendar.superProfessor();
-		int superProfessorStudents = evCalendar.getSuperProfessorStudents();
 		
 		if(superProfessor == null)
 			System.out.println(ERROR_NO_PROFESSORS);
 		else
-			System.out.printf(LIST_SUPERPROFESSOR, superProfessor.getName(), superProfessorStudents);
+			System.out.printf(LIST_SUPERPROFESSOR, superProfessor.getName(), ((ProfessorClass)superProfessor).getNumberOfStudents());
 	}
 
 	private static void stressometer(EvaluationsCalendar evCalendar, Scanner in) {

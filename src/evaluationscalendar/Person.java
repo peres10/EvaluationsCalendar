@@ -1,5 +1,7 @@
 package evaluationscalendar;
 
+import dataStructures.Iterator;
+
 /**
  * A person that has a name and the number of courses enrolled/assigned in
  */
@@ -18,6 +20,13 @@ public interface Person {
 
 	/**
 	 * Increases the number of courses a Person is enrolled/assigned
+	 * @param courses 
 	 */
-	void addCourse();
+	void addCourse(Courses courses);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	Iterator<Courses> getListOfCoursesInPerson();
 }

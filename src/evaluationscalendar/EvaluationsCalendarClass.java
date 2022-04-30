@@ -5,7 +5,6 @@ import dataStructures.*;
 public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	private Array<Person> people;
 	private Array<Courses> courses;
-	private int superProfessorStudents;
 	
 	public EvaluationsCalendarClass() {
 		people = new ArrayClass<>();
@@ -102,11 +101,13 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	@Override
 	public void assignProfessorToCourse(String professorName, String courseName) {
 		searchCourse(courseName).addProfessor(searchPerson(professorName));
+		searchPerson(professorName).addCourse(searchCourse(courseName));
 	}
 
 	@Override
 	public void enrolStudentInCourse(String studentName, String courseName) {
 		searchCourse(courseName).addStudent(searchPerson(studentName));
+		searchPerson(studentName).addCourse(searchCourse(courseName));
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	@Override
 	public Iterator<Deadline> getPersonalDeadlines(String personName) {
-		Iterator<Courses> coursesIT = listAllCourses();
+		Iterator<Courses> coursesIT = searchPerson(personName).getListOfCoursesInPerson();
 		Iterator<Deadline> deadlinesIT = null;
 		Courses course;
 		Array<Deadline> deadlines = new  ArrayClass<>();
@@ -234,13 +235,11 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		
 		while(coursesIT.hasNext()) {
             course = coursesIT.next();
-            if(studentInCourse(personName, course.getName())) 
-                addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
-            else if(professorInCourse(personName, course.getName())) 
-				addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
-            
+            addDeadlineToDeadlineArray(deadlinesIT,course.getName(),deadlines);
 		}
+		
 		deadlinesAux = deadlines.sort();
+		deadlinesAux = sortAlphabetically(deadlinesAux);
 		return deadlinesAux.iterator();
 	}
 
@@ -252,7 +251,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	@Override
 	public Iterator<CourseTests> getPersonalTests(String personName) {
-		Iterator<Courses> coursesIT = listAllCourses();
+		Iterator<Courses> coursesIT = searchPerson(personName).getListOfCoursesInPerson();
 		Iterator<CourseTests> testsIT = null;
 		Courses course;
 		Array<CourseTests> tests = new  ArrayClass<>();
@@ -260,15 +259,26 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		
 		while(coursesIT.hasNext()) {
             course = coursesIT.next();
-            if(studentInCourse(personName, course.getName())) 
-                addTestToTestArray(testsIT,course.getName(),tests);
-            else if(professorInCourse(personName, course.getName())) 
-				addTestToTestArray(testsIT,course.getName(),tests);
-            
+            addTestToTestArray(testsIT,course.getName(),tests);
 		}
 		testsAux = tests.sort();
 		return testsAux.iterator();
 
+	}
+
+	private Array<Deadline> sortAlphabetically(Array<Deadline> deadlines) {
+		Deadline dd1, dd2, deadlineAux;
+		for(int i = 0; i < deadlines.size() - 1; i++) {
+			dd1 = deadlines.get(i);
+			dd2 = deadlines.get(i+1);
+			if(dd1.compareTo(dd2) == 0 && dd1.getDeadlineCourse().compareTo(dd2.getDeadlineCourse()) > 0) {
+				deadlineAux = deadlines.get(i);
+				deadlines.removeAt(i);
+				deadlines.insertAt(deadlineAux, i + 1);
+			}
+		}
+		
+		return deadlines;
 	}
 
 	private void addTestToTestArray(Iterator<CourseTests> testsIT, String courseName, Array<CourseTests> tests) {
@@ -279,101 +289,19 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	@Override
 	public Person superProfessor() {
-		Iterator<Courses> coursesIT = listAllCourses();
-		Iterator<Person> professorsIT;
-		Courses course;
-		Person professor;
-		Array<Person> professors = new ArrayClass<>();
-		Array<Integer> numOfStudentsPerProfessor = new ArrayClass<>();
-		int i = 0, numOfStudents = 0, mostStudentsIndex = 0;
+		Iterator<Person> personIT = listAllPeople();
+		Person person, superProfessor = null;
+		int mostStudents = -1;
 		
-		while(coursesIT.hasNext()) {
-			course = coursesIT.next();
-			professorsIT = listProfessorsInCourse(course.getName());
-			
-			while(professorsIT.hasNext()) {
-				professor = professorsIT.next();
-				if(!isProfessorInArray(professor, professors)) {
-					professors.insertLast(professor);
-					numOfStudentsPerProfessor.insertLast(course.getNumberOfStudents());
-				}
-				else {
-					i = getProfessorArrayIndex(professor, professors);
-					numOfStudents = numOfStudentsPerProfessor.get(i) + course.getNumberOfStudents();
-					numOfStudentsPerProfessor.removeAt(i);
-					numOfStudentsPerProfessor.insertAt(numOfStudents, i);
-				}
-			}
-		}	
-		
-		
-		mostStudentsIndex = getMostStudentsIndex(numOfStudentsPerProfessor, professors);
-		
-		if(professors.size() == 0 || numOfStudentsPerProfessor.get(mostStudentsIndex) == 0) {
-			Iterator<Person> personIT = listAllPeople();
-			Person person;
-			while(personIT.hasNext()) {
-				person = personIT.next();
-				if(person instanceof ProfessorClass)
-					return person;
-			}
-				
-		}
-		
-		
-		return professors.get(mostStudentsIndex);
-		
-	}
-
-	private int getMostStudentsIndex(Array<Integer> numOfStudentsPerProfessor, Array<Person> professors) {
-		int highestValue = 0;
-		int highestValueIndex = 0;
-		
-		for(int i = 0; i < numOfStudentsPerProfessor.size(); i++) {
-			
-			if(numOfStudentsPerProfessor.get(i) > highestValue) {
-				highestValue = numOfStudentsPerProfessor.get(i);
-				highestValueIndex = i;
-			}
-			else if(numOfStudentsPerProfessor.get(i) == highestValue) {
-				highestValueIndex = whoIsFirstProfessor(professors, highestValueIndex, i);		
+		while(personIT.hasNext()) {
+			person = personIT.next();
+			if(person instanceof ProfessorClass && mostStudents < ((ProfessorClass) person).getNumberOfStudents()) {
+				mostStudents = ((ProfessorClass) person).getNumberOfStudents();
+				superProfessor = person;
 			}
 		}
-		this.superProfessorStudents = highestValue;
-		return highestValueIndex;
-	}
-
-	private int whoIsFirstProfessor(Array<Person> professors, int highestValueIndex, int i) {	
 		
-			Iterator<Person> personIT = listAllPeople();
-			Person person;
-			while(personIT.hasNext()) {
-				person = personIT.next();
-				if(person.getName().equals(professors.get(i).getName()))
-					return i;
-					
-			}
-			return highestValueIndex;
-	}
-
-	private int getProfessorArrayIndex(Person professor, Array<Person> professors) {
-		for(int i = 0; i < professors.size(); i++) {
-			if(professors.get(i).getName().equals(professor.getName()))
-				return i;
-		}
-		return 0;
-	}
-
-	private boolean isProfessorInArray(Person professor, Array<Person> professors) {
-		for(int i = 0; i < professors.size(); i++) {
-			if(professors.get(i).getName().equals(professor.getName()))
-				return true;
-		}
-		return false;		
-	}
-	
-	public int getSuperProfessorStudents() {
-		return this.superProfessorStudents;
+		return ((ProfessorClass)superProfessor);
 	}
 
 }

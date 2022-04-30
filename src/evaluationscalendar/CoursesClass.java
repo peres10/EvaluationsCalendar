@@ -4,7 +4,6 @@ import dataStructures.*;
 
 public class CoursesClass implements Courses {
 	private final String courseName;
-	private int numberOfTests;
 
 	private Array<Person> professors;
 	private Array<Person> students;
@@ -21,26 +20,24 @@ public class CoursesClass implements Courses {
 
 	@Override
 	public void addProfessor(Person professor) {
-		professor.addCourse();
 		professors.insertLast(professor);
 	}
 
 	@Override
 	public void addStudent(Person student) {
-		student.addCourse();
 		students.insertLast(student);
 	}
 
 	@Override
 	public void addTest() {
-		this.numberOfTests++;
+		
 	}
 
 	@Override
 	public void addDeadline(int year,int month,int day,String name) {
-		deadlines.insertLast(new DeadlineClass(year,month,day,name,this.courseName));
-		Array<Deadline> deadlinesAux = deadlines.sort();
-		deadlines = deadlinesAux;
+		this.deadlines.insertLast(new DeadlineClass(year,month,day,name,this.courseName));
+		Array<Deadline> deadlinesAux = this.deadlines.sort();
+		this.deadlines = deadlinesAux;
 	}
 	
 	@Override
@@ -60,7 +57,7 @@ public class CoursesClass implements Courses {
 
 	@Override
 	public int getNumberOfTests() {
-		return 0;//tests.size();
+		return tests.size();
 	}
 
 	@Override
