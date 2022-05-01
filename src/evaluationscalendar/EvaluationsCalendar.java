@@ -219,4 +219,6 @@ public interface EvaluationsCalendar {
 	int[] checkConflictsOfTest(String courseName,LocalDateTime testDate,int duration);
 	boolean hasTestInSameHourCourse(String courseName,LocalDateTime testDate,int duration);
 	boolean hasTestInCourse(String courseName,String testName);
+
+	Iterator<Person> listStudentsStress();
 }

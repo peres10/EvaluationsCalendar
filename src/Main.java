@@ -23,6 +23,7 @@ public class Main {
 	private static final String HEADER_DEADLINES_STUDENT = "Deadlines for %s:\n";
 	private static final String HEADER_TESTS_COURSE = "Tests for couse %s:\n";
 	private static final String HEADER_TESTS_STUDENT = "Tests for %s:\n";
+	private static final String HEADER_STRESSOMETER = "Most stresses students:";
 	private static final String LIST_STUDENT_FORMAT = "[%d] %s (%d)\n";
 	private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
 	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
@@ -32,7 +33,8 @@ public class Main {
 	private static final String LIST_TEST_COURSE = "%02d-%02d-%02d %02dh%02d-%02dh%02d: %s\n";
 	private static final String LIST_TEST_STUDENT = "%s %s-%s: %s - %s\n";
 	private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
-
+	private static final String LIST_STRESSED_STUDENTS = "%d %s (%d days, %d evaluations)\n";
+	
 	//error and success messages
 	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands.\n";
 	private static final String ERROR_EMPTY_DATABASE = "No people registered!";
@@ -47,6 +49,7 @@ public class Main {
 	private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %s!\n";
 	private static final String ERROR_INADEQUATE_NUM_STUDENTS = "Inadequate number of students!";
 	private static final String ERROR_INADEQUATE_NUM_COURSES = "Inadequate number of courses!";
+	private static final String ERROR_INVALID_NUM_STUDENTS = "Inavlid number of students!\n";
 	private static final String ERROR_STUDENT_ALREADY_ENROLLED = "Student %s is already enrolled in course %s!\n";
 	private static final String ERROR_NO_ASSIGN_ENROL = "Course %s has no assigned professors and no enrolled students.\n";
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
@@ -56,7 +59,8 @@ public class Main {
 	private static final String ERROR_TEST_EXISTS = "Course %s already has a test named %s!\n";
 	private static final String ERROR_CANT_SCHEDULE_THAT_TIME = "Cannot schedule test %s at that time!\n";
 	private static final String ERROR_NO_PROFESSORS = "There are no professors!";
-
+	private static final String ERROR_NO_STRESSED_STUDENTS = "There are no stressed students right now!\n";
+	
 	private static final String PERSON_ADDED = "%s added.\n";
 	private static final String COURSE_ADDED = "Course %s added.\n";
 	private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
@@ -517,8 +521,25 @@ public class Main {
 	}
 
 	private static void stressometer(EvaluationsCalendar evCalendar, Scanner in) {
-		// TODO Auto-generated method stub	
-	}
+        Iterator<Person> stressedStudentsIT;
+        int numberOfStudents = in.nextInt();
+        int i = 0;
+        Person stressedStudent;
 
+        if(numberOfStudents <= 0)
+            System.out.println(ERROR_INVALID_NUM_STUDENTS);
+        else {
+            stressedStudentsIT = evCalendar.listStudentsStress();
+            if(!stressedStudentsIT.hasNext())
+                System.out.println(ERROR_NO_STRESSED_STUDENTS);
+            else {
+                System.out.println(HEADER_STRESSOMETER);
+                while(stressedStudentsIT.hasNext() && i < numberOfStudents) {
+                    stressedStudent = stressedStudentsIT.next();
+                    System.out.printf(LIST_STRESSED_STUDENTS, ((Student)stressedStudent).getStudentNumber(), stressedStudent.getName(), ((Student)stressedStudent).getConsecutiveDaysWithTests(), ((Student)stressedStudent).getNumberOfTestsDuringStress());
+                }
+            }
+        }
+    }
 
 }

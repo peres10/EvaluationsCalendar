@@ -325,7 +325,23 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	}
 
-
+	@Override
+	public Iterator<Person> listStudentsStress() {
+		Iterator<Person> personIT = listAllPeople();
+		Person person;
+		Array<Person> students = new ArrayClass<>();
+		Array<Person> sortedStressedStudents;
+		
+		while(personIT.hasNext()) {
+			person = personIT.next();
+			if(person instanceof Student) {
+				((Student) person).studentStressometer();
+				students.insertLast(person);
+			}
+		}
+		sortedStressedStudents = sortStressedStudents(students);
+		return sortedStressedStudents.iterator();
+	}
 
 	/*
 	 ****************************************** Funções privadas ******************************************
@@ -522,4 +538,20 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		}
 		return false;
 	}
+	
+	private Array<Person> sortStressedStudents(Array<Person> students) {
+        Person student;
+        for(int i = 0; i <students.size(); i++) {
+            for(int j = 0; i < students.size(); j++) {
+                if(((Student)students.get(i)).getConsecutiveDaysWithTests() < ((Student)students.get(j)).getConsecutiveDaysWithTests()) {
+                    student = students.get(i);
+                    students.removeAt(i);
+                    students.insertAt(students.get(j), i);
+                    students.removeAt(j);
+                    students.insertAt(student, j);
+                }
+            }
+        }
+        return students;
+    }
 }

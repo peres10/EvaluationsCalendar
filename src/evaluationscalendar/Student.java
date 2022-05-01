@@ -9,9 +9,14 @@ public interface Student {
      * @return int with the student number
      */
 
-
+	void studentStressometer();
+	
     /*
      ****************************************** Getters ******************************************
      */
     int getStudentNumber();
+
+	int getConsecutiveDaysWithTests();
+
+	int getNumberOfTestsDuringStress();
 }
