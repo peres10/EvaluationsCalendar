@@ -1,5 +1,6 @@
 import evaluationscalendar.*;
 
+import java.time.*;
 import java.util.Scanner;
 
 import dataStructures.*;
@@ -27,12 +28,12 @@ public class Main {
 	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
 	private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
 	private static final String LIST_DEADLINE_COURSE = "%s: %s\n";
-    private static final String LIST_DEADLINE_STUDENT = "[%s] %s: %s\n";
-    private static final String LIST_TEST_COURSE = "%s-%s: %s\n";
-    private static final String LIST_TEST_STUDENT = "%s %s-%s: %s - %s\n";
-    private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
+	private static final String LIST_DEADLINE_STUDENT = "[%s] %s: %s\n";
+	private static final String LIST_TEST_COURSE = "%02d-%02d-%02d %02dh%02d-%02dh%02d: %s\n";
+	private static final String LIST_TEST_STUDENT = "%s %s-%s: %s - %s\n";
+	private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
 
-    //error and success messages
+	//error and success messages
 	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands.\n";
 	private static final String ERROR_EMPTY_DATABASE = "No people registered!";
 	private static final String ERROR_ALREADY_EXIST_PERSON = "%s already exists!\n";
@@ -52,15 +53,16 @@ public class Main {
 	private static final String ERROR_NO_DEADLINE_DEFINED = "No deadlines defined for %s!\n";
 	private static final String ERROR_NO_TEST_SCHEDULED = "No scheduled tests for %s!\n";
 	private static final String ERROR_DEADLINE_EXISTS = "Deadline %s already exists!\n";
-	private static final String ERROR_TEST_EXISTS = "";
+	private static final String ERROR_TEST_EXISTS = "Course %s already has a test named %s!\n";
+	private static final String ERROR_CANT_SCHEDULE_THAT_TIME = "Cannot schedule test %s at that time!\n";
 	private static final String ERROR_NO_PROFESSORS = "There are no professors!";
-	
+
 	private static final String PERSON_ADDED = "%s added.\n";
 	private static final String COURSE_ADDED = "Course %s added.\n";
 	private static final String PROFESSOR_ASSIGNED = "Professor %s assigned to %s.\n";
 	private static final String STUDENTS_ADDED_TO_COURSE = "%d students added to course %s.\n";
 	private static final String DEADLINE_ADDED_TO_COURSE = "Deadline %d-%02d-%02d added to %s.\n";
-
+	private static final String TEST_ADDED_TO_COURSE = "%s %s %s %d-%02d-%02d %02dh%02d-%02dh%02d (%d, %d)\n";
 
 	private static final String EXIT_MSG = "Bye!";
 
@@ -118,26 +120,26 @@ public class Main {
 		Command c = getCommand(comm);
 		while(!c.equals(Command.EXIT)) {
 			switch(c) {
-			case HELP: helpCommands(); break;
-			case PEOPLE: listAllPeople(evCalendar); break;
-			case PROFESSOR: addProfessor(evCalendar, in); break;
-			case STUDENT: addStudent(evCalendar, in); break;
-			case COURSES: listAllCourses(evCalendar); break;
-			case COURSE: addCourse(evCalendar, in); break;
-			case ROSTER: courseRoster(evCalendar, in); break;
-			case ASSIGN: assignProfessor(evCalendar, in); break;
-			case ENROL: enrolStudent(evCalendar, in); break;
-			case INTERSECTION: intersection(evCalendar, in); break;
-			case COURSEDEADLINES: courseDeadlines(evCalendar, in); break;
-			case PERSONALDEADLINES: personalDeadlines(evCalendar, in); break;
-			case DEADLINE: addDeadline(evCalendar, in); break;
-			case COURSETESTS: courseTests(evCalendar, in); break;
-			case PERSONALTESTS: personalTests(evCalendar, in); break;
-			case SCHEDULE: addTest(evCalendar, in); break;
-			case SUPERPROFESSOR: superProfessor(evCalendar); break;
-			case STRESSOMETER: stressometer(evCalendar, in); break;
-			case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
-			default: break;
+				case HELP: helpCommands(); break;
+				case PEOPLE: listAllPeople(evCalendar); break;
+				case PROFESSOR: addProfessor(evCalendar, in); break;
+				case STUDENT: addStudent(evCalendar, in); break;
+				case COURSES: listAllCourses(evCalendar); break;
+				case COURSE: addCourse(evCalendar, in); break;
+				case ROSTER: courseRoster(evCalendar, in); break;
+				case ASSIGN: assignProfessor(evCalendar, in); break;
+				case ENROL: enrolStudent(evCalendar, in); break;
+				case INTERSECTION: intersection(evCalendar, in); break;
+				case COURSEDEADLINES: courseDeadlines(evCalendar, in); break;
+				case PERSONALDEADLINES: personalDeadlines(evCalendar, in); break;
+				case DEADLINE: addDeadline(evCalendar, in); break;
+				case COURSETESTS: courseTests(evCalendar, in); break;
+				case PERSONALTESTS: personalTests(evCalendar, in); break;
+				case SCHEDULE: addTest(evCalendar, in); break;
+				case SUPERPROFESSOR: superProfessor(evCalendar); break;
+				case STRESSOMETER: stressometer(evCalendar, in); break;
+				case UNKNOWN: System.out.printf(ERROR_UNKNOWN_COMMAND,comm); break;
+				default: break;
 			}
 			comm = in.next().toUpperCase();
 			c = getCommand(comm);
@@ -235,8 +237,8 @@ public class Main {
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
 			return;
 		}
-		
-		professorsIT=evCalendar.listProfessorsInCourse(courseName);		
+
+		professorsIT=evCalendar.listProfessorsInCourse(courseName);
 		studentsIT=evCalendar.listStudentsInCourse(courseName);
 
 		if(!professorsIT.hasNext() && !studentsIT.hasNext())
@@ -285,8 +287,8 @@ public class Main {
 		String currentStudent;
 		Array<String> studentName = new ArrayClass<>();
 
-		
-		for(int i = 0; i < numStudents; i++) { 
+
+		for(int i = 0; i < numStudents; i++) {
 			currentStudent = in.nextLine().trim();
 
 			if(!evCalendar.existPerson(currentStudent)) {
@@ -299,13 +301,13 @@ public class Main {
 			}
 			else
 				studentName.insertLast(currentStudent);
-		}	
+		}
 
 		if(!evCalendar.existsCourse(courseName)) {
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
 			return;
 		}
-		
+
 		for(int i = 0; i < enrolledStudents; i++)
 			evCalendar.enrolStudentInCourse(studentName.get(i), courseName);
 
@@ -319,16 +321,16 @@ public class Main {
 		Iterator<Person> studentsIT, professorsIT;
 		Person professor;
 		Student student;
-		
-		for(i = 0; i < numCourses; i++) 
+
+		for(i = 0; i < numCourses; i++)
 			coursesName.insertLast(in.nextLine().trim());
 
-		if(numCourses <= 1) {			
+		if(numCourses <= 1) {
 			System.out.println(ERROR_INADEQUATE_NUM_COURSES);
 			return;
 		}
 
-		for(i = 0; i < numCourses; i++) { 			
+		for(i = 0; i < numCourses; i++) {
 			if(!evCalendar.existsCourse(coursesName.get(i))) {
 				System.out.printf(ERROR_COURSE_NOT_EXIST, coursesName.get(i));
 				return;
@@ -337,24 +339,24 @@ public class Main {
 
 		professorsIT = evCalendar.courseIntersectionProfessors(coursesName);
 		studentsIT = evCalendar.courseIntersectionStudents(coursesName);
-		
-		
+
+
 		if(!professorsIT.hasNext() && !studentsIT.hasNext())
 			System.out.println(ERROR_NO_ONE_TO_LIST);
 		else {
 			System.out.println(HEADER_INTERSECTION);
 			System.out.println(HEADER_PROFESSORS);
-			
+
 			while(professorsIT.hasNext()) {
 				professor = professorsIT.next();
 				System.out.println(professor.getName());
 			}
-			
+
 			System.out.println(HEADER_STUDENTS);
 			while(studentsIT.hasNext()) {
 				student = (Student) studentsIT.next();
 				System.out.printf(LIST_STUDENT_W_NUMBER, student.getStudentNumber(), ((Person) student).getName());
-			}		
+			}
 		}
 	}
 
@@ -365,7 +367,7 @@ public class Main {
 		if(!evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
 		else {
-			
+
 			if(!evCalendar.hasDeadlinesCourse(courseName))
 				System.out.printf(ERROR_NO_DEADLINE_DEFINED, courseName);
 			else {
@@ -375,31 +377,31 @@ public class Main {
 					Deadline deadline= deadlinesIt.next();
 					System.out.printf(LIST_DEADLINE_COURSE,deadline.getName(),deadline.getDate().toString());
 				}
-			}	
+			}
 		}
 	}
 
 	private static void personalDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
-        String personName = in.nextLine().trim();
-        Iterator<Deadline> deadlinesIT;
-        Deadline deadline;
+		String personName = in.nextLine().trim();
+		Iterator<Deadline> deadlinesIT;
+		Deadline deadline;
 
-        if(!evCalendar.existPerson(personName))
-            System.out.printf(ERROR_STUDENT_DEADLINE_NOT_EXIST, personName);
-        else {
-            deadlinesIT = evCalendar.getPersonalDeadlines(personName);
-            
-            if(!deadlinesIT.hasNext())
-                System.out.printf(ERROR_NO_DEADLINE_DEFINED, personName);
-            else {
-                System.out.printf(HEADER_DEADLINES_STUDENT, personName);
-                while(deadlinesIT.hasNext()) { 
-                	deadline = deadlinesIT.next();
-                	System.out.printf(LIST_DEADLINE_STUDENT, deadline.getDeadlineCourse(), deadline.getName(), deadline.getDate());	
-                }     
-            }
-        }
-    }
+		if(!evCalendar.existPerson(personName))
+			System.out.printf(ERROR_STUDENT_DEADLINE_NOT_EXIST, personName);
+		else {
+			deadlinesIT = evCalendar.getPersonalDeadlines(personName);
+
+			if(!deadlinesIT.hasNext())
+				System.out.printf(ERROR_NO_DEADLINE_DEFINED, personName);
+			else {
+				System.out.printf(HEADER_DEADLINES_STUDENT, personName);
+				while(deadlinesIT.hasNext()) {
+					deadline = deadlinesIT.next();
+					System.out.printf(LIST_DEADLINE_STUDENT, deadline.getDeadlineCourse(), deadline.getName(), deadline.getDate());
+				}
+			}
+		}
+	}
 
 	private static void addDeadline(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName,deadlineName;
@@ -408,6 +410,7 @@ public class Main {
 		year=in.nextInt();
 		month=in.nextInt();
 		day=in.nextInt();
+		LocalDate deadlineDate = LocalDate.of(year,month,day);
 		deadlineName=in.nextLine().trim();
 		if(!evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_NOT_EXIST,courseName);
@@ -415,7 +418,7 @@ public class Main {
 			if(evCalendar.hasDeadlineInCourse(courseName,deadlineName))
 				System.out.printf(ERROR_DEADLINE_EXISTS,deadlineName);
 			else{
-				evCalendar.addDeadlineCourse(courseName,deadlineName,year,month,day);
+				evCalendar.addDeadlineCourse(courseName,deadlineName,deadlineDate);
 				System.out.printf(DEADLINE_ADDED_TO_COURSE,year,month,day,courseName);
 			}
 		}
@@ -424,47 +427,49 @@ public class Main {
 	private static void courseTests(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
 		Iterator<CourseTests> testsIT;
-		
+
 		if(!evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_NOT_EXIST, courseName);
 		else {
 			if(!evCalendar.hasTestsCourse(courseName))
-				System.out.println(ERROR_NO_TEST_SCHEDULED);
+				System.out.printf(ERROR_NO_TEST_SCHEDULED,courseName);
 			else {
 				testsIT = evCalendar.listAllTestsInACourse(courseName);
 				System.out.printf(HEADER_TESTS_COURSE, courseName);
 				while(testsIT.hasNext()) {
 					CourseTests test = testsIT.next();
-					System.out.printf(LIST_TEST_COURSE, test.getDateHours(), test.getTestEnding(), test.getName());
-				}		
-			}	
-		}	
+					System.out.printf(LIST_TEST_COURSE,test.getDateHours().getYear(),test.getDateHours().getMonthValue(),test.getDateHours().getDayOfMonth(),
+							test.getDateHours().getHour(),test.getDateHours().getMinute(),
+							test.getTestEnding().getHour(),test.getTestEnding().getMinute(),test.getName());
+				}
+			}
+		}
 	}
 
 	private static void personalTests(EvaluationsCalendar evCalendar, Scanner in) {
 		String personName = in.nextLine().trim();
-        Iterator<CourseTests> testsIT;
-        CourseTests test;
+		Iterator<CourseTests> testsIT;
+		CourseTests test;
 
-        if(!evCalendar.existPerson(personName))
-            System.out.printf(ERROR_STUDENT_NOT_EXIST, personName);
-        else {
-            testsIT = evCalendar.getPersonalTests(personName);
-            
-            if(!testsIT.hasNext())
-                System.out.printf(ERROR_NO_TEST_SCHEDULED, personName);
-            else {
-                System.out.printf(HEADER_TESTS_STUDENT, personName);
-                while(testsIT.hasNext()) { 
-                	test = testsIT.next();
-                	  System.out.printf(LIST_TEST_STUDENT, test.getDateHours(), test.getTestEnding(), test.getTestCourse(), test.getName());	
-                }     
-            }
-        }
+		if(!evCalendar.existPerson(personName))
+			System.out.printf(ERROR_STUDENT_NOT_EXIST, personName);
+		else {
+			testsIT = evCalendar.getPersonalTests(personName);
+
+			if(!testsIT.hasNext())
+				System.out.printf(ERROR_NO_TEST_SCHEDULED, personName);
+			else {
+				System.out.printf(HEADER_TESTS_STUDENT, personName);
+				while(testsIT.hasNext()) {
+					test = testsIT.next();
+					System.out.printf(LIST_TEST_STUDENT, test.getDateHours(), test.getTestEnding(), test.getTestCourse(), test.getName());
+				}
+			}
+		}
 	}
 
 	private static void addTest(EvaluationsCalendar evCalendar, Scanner in) {
-/*		String courseName,testName;
+		String courseName,testName;
 		int year,month,day,hour,minutes,duration;
 		year=in.nextInt();
 		month=in.nextInt();
@@ -474,21 +479,37 @@ public class Main {
 		duration=in.nextInt();
 		courseName=in.nextLine().trim();
 		testName=in.nextLine().trim();
+		LocalDateTime testTime = LocalDateTime.of(year,month,day,hour,minutes);
 		if(!evCalendar.existsCourse(courseName))
 			System.out.printf(ERROR_COURSE_NOT_EXIST,courseName);
+		else if(evCalendar.hasTestInCourse(courseName,testName)) {
+			System.out.printf(ERROR_TEST_EXISTS,courseName,testName);
+		}
+		else if(evCalendar.hasTestInSameHourCourse(courseName,testTime,duration)){
+			System.out.printf(ERROR_CANT_SCHEDULE_THAT_TIME,testName);
+		}
 		else{
-			if(evCalendar.hasTestInCourse(courseName,testNameName))
-				System.out.printf(ERROR_DEADLINE_EXISTS,deadlineName);
-			else{
-				evCalendar.addDeadlineCourse(courseName,deadlineName,year,month,day);
-				System.out.printf(DEADLINE_ADDED_TO_COURSE,year,month,day,courseName);
+			int[] conflicts=evCalendar.checkConflictsOfTest(courseName,testTime,duration);
+			String conflictState=null;
+			switch(conflicts[0]) {
+				case 0:
+					conflictState = "free";
+					break;
+				case 1:
+					conflictState = "mild";
+					break;
+				case 2:
+					conflictState = "severe";
+					break;
 			}
-		}*/
+			evCalendar.addTestCourse(courseName,testName,testTime,duration);
+			System.out.printf(TEST_ADDED_TO_COURSE,conflictState,courseName,testName,year,month,day,hour,minutes,hour+duration,minutes,conflicts[1],conflicts[0]);
+		}
 	}
 
 	private static void superProfessor(EvaluationsCalendar evCalendar) {
 		Person superProfessor = evCalendar.superProfessor();
-		
+
 		if(superProfessor == null)
 			System.out.println(ERROR_NO_PROFESSORS);
 		else

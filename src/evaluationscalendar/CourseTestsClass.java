@@ -8,8 +8,8 @@ public class CourseTestsClass implements CourseTests{
     String courseName;
     int duration;
 
-    public CourseTestsClass(int year,int month,int day,int hour,int minutes,int duration,String name,String courseName){
-        dateHours = LocalDateTime.of(year, month, day,hour,minutes);
+    public CourseTestsClass(LocalDateTime testDate,int duration,String name,String courseName){
+        dateHours = testDate;
         this.name = name;
         this.courseName = courseName;
         this.duration = duration;

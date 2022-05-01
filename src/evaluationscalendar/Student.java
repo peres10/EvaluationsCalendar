@@ -8,5 +8,10 @@ public interface Student {
      * Gets the student number of a student
      * @return int with the student number
      */
+
+
+    /*
+     ****************************************** Getters ******************************************
+     */
     int getStudentNumber();
 }

@@ -6,6 +6,22 @@ import dataStructures.Iterator;
  * A person that has a name and the number of courses enrolled/assigned in
  */
 public interface Person {
+
+	/*
+	 ****************************************** Setters ******************************************
+	 */
+
+	/**
+	 * Adds a course to the list of courses of a Person
+	 * @param courses
+	 */
+	void addCourse(Courses course);
+
+
+	/*
+	 ****************************************** Getters ******************************************
+	 */
+
 	/**
 	 * Gets the name of a person
 	 * @return String with name of a person
@@ -18,15 +34,14 @@ public interface Person {
 	 */
 	int getNumOfCourses();
 
-	/**
-	 * Increases the number of courses a Person is enrolled/assigned
-	 * @param courses 
+
+	/*
+	 ****************************************** Iterators & Array's ******************************************
 	 */
-	void addCourse(Courses courses);
-	
+
 	/**
-	 * 
-	 * @return
+	 * Gets the list of Courses that a person is in
+	 * @return Iterator of Courses
 	 */
 	Iterator<Courses> getListOfCoursesInPerson();
 }

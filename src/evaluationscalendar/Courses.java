@@ -1,12 +1,18 @@
 package evaluationscalendar;
 
-import dataStructures.Array;
-import dataStructures.Iterator;
+import dataStructures.*;
+import java.time.*;
+
 
 /**
- * A course with Students and Professors assigned to it and the deadlines
+ * A course with Students and Professors assigned to it, also has a list of deadlines and tests
  */
 public interface Courses {
+
+	/*
+	****************************************** Setters ******************************************
+	*/
+
 	/**
 	 * Adds a professor to the course
 	 * @pre professor != null
@@ -21,11 +27,25 @@ public interface Courses {
 	 */
 	void addStudent(Person student);
 
-	//not commented yet
-	void addTest();
+	/**
+	 * Adds a test to a course
+	 *
+	 *
+	 */
+	void addTest(LocalDateTime testDate,int duration,String testName,String courseName);
 
-	//not commented yet
-	void addDeadline(int year,int month,int day,String name);
+	/**
+	 * Adds a deadline to a course
+	 * @pre !hasDeadline(name)
+	 * @param deadlineDate - date of the deadline
+	 * @param name - name of the deadline
+	 */
+	void addDeadline(LocalDate deadlineDate,String name);
+
+
+	/*
+	****************************************** Getters ******************************************
+	*/
 
 	/**
 	 * Gets the name of a course
@@ -40,16 +60,39 @@ public interface Courses {
 	int getNumberOfProfessors();
 
 	/**
-	 * Gets the number of student of a course
+	 * Gets the number of students of a course
 	 * @return int with the number of professors of the course
 	 */
 	int getNumberOfStudents();
 
-	//not commented yet
+	/**
+	 * Gets the number of tests of a course
+	 * @return int with the number of tests of the course
+	 */
 	int getNumberOfTests();
 
-	//not commented yet
+	/**
+	 * Gets the number of deadlines of a course
+	 * @return int with the number of tests of the course
+	 */
 	int getNumberOfDeadlines();
+
+
+	/*
+	****************************************** Pre-Conditions ******************************************
+	*/
+
+	/**
+	 * Checks if a deadline with a specific name already exists in the course
+	 * @param deadlineName
+	 * @return true if exists , false if not
+	 */
+	boolean hasDeadline(String deadlineName);
+
+
+	/*
+	*************************************** Iterators & Array's ***************************************
+	*/
 
 	/**
 	 * Returns the list of professors of a course
@@ -63,13 +106,27 @@ public interface Courses {
 	 */
 	Iterator<Person> getListOfStudentsCourse();
 
+	/**
+	 * Returns the array of professors in a course (array need for the intersection command)
+	 * @return Array of Person (with the professors)
+	 */
 	Array<Person> getArrayOfProfessors();
 
+	/**
+	 * Returns the array of students in a course (array need for the intersection command)
+	 * @return Array of Person (with the students)
+	 */
 	Array<Person> getArrayOfStudents();
 
-	boolean hasDeadline(String deadlineName);
-
+	/**
+	 * Returns the list of deadlines of a course
+	 * @return Iterator of Deadline
+	 */
 	Iterator<Deadline> getListOfDeadlinesCourse();
 
+	/**
+	 * Returns the list of tests of a course
+	 * @return Array of CourseTests
+	 */
 	Iterator<CourseTests> getListOfTestsCourse();
 }

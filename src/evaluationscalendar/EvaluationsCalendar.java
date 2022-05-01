@@ -1,12 +1,17 @@
 package evaluationscalendar;
 
 import dataStructures.*;
+import java.time.*;
 
 /**
  * An Evaluation Calendar system that has Persons(Students or Professors), Courses and Deadlines
  * is used to manage the Persons of a course and the deadlines of courses
  */
 public interface EvaluationsCalendar {
+
+	/*
+	 ****************************************** Setters ******************************************
+	 */
 
 	/**
 	 * Adds a student to the system
@@ -31,6 +36,47 @@ public interface EvaluationsCalendar {
 	void addCourse(String courseName);
 
 	/**
+	 * Assigns a professor to a given course
+	 * @pre existCourse(courseName) & !professorInCourse(professorName,courseName)
+	 * @param professorName - name of the professor
+	 * @param courseName - name of the course
+	 */
+	void assignProfessorToCourse(String professorName, String courseName);
+
+	/**
+	 * Enrolls a student to a given course
+	 * @pre existCourse(courseName) & !studentInCourse(studentName,courseName)
+	 * @param studentName - name of the student
+	 * @param courseName - name of the course
+	 */
+	void enrolStudentInCourse(String studentName, String courseName);
+
+	/**
+	 * Adds a deadline to a course
+	 * @pre existCourse(courseName) & !hasDeadlineInCourse(courseName,deadlineName)
+	 * @param courseName
+	 * @param deadlineName
+	 * @param deadlineDate
+	 */
+	void addDeadlineCourse(String courseName,String deadlineName,LocalDate deadlineDate);
+
+
+	/*
+	 ****************************************** Getters ******************************************
+	 */
+
+	/**
+	 * Devolve o professor que tem mais alunos
+	 * @return Person - com um professor
+	 */
+	Person superProfessor();
+
+
+	/*
+	 ****************************************** Pre-Conditions ******************************************
+	 */
+
+	/**
 	 * Checks if a person with the given name is registered
 	 * @param name - name of the person
 	 * @return boolean , true if exists , false if not
@@ -53,45 +99,65 @@ public interface EvaluationsCalendar {
 
 	/**
 	 * Checks if a student is in a given course
+	 * @pre !existCourse(courseName)
 	 * @param studentName - name of the student to search
 	 * @param courseName - course name
- 	 * @return boolean , true if the student is in the course , false if not
+	 * @return boolean , true if the student is in the course , false if not
 	 */
 	boolean studentInCourse(String studentName, String courseName);
 
 	/**
 	 * Checks if a professor is in a given course
+	 * @pre !existCourse(courseName)
 	 * @param professorName - name of the professor to search
 	 * @param courseName - course name
-	 * @return boolean , true if the professor is in the course, false it not
+	 * @return boolean , true if the professor is in the course, false if not
 	 */
 	boolean professorInCourse(String professorName, String courseName);
 
 	/**
-	 * Assigned a professor to a given course
-	 * @param professorName - name of the professor
-	 * @param courseName - name of the course
+	 * Check if a deadline with a specific name exists in a course, also given its name
+	 * @pre !existCourse(courseName)
+	 * @param courseName - the name of the course
+	 * @param deadlineName - the name of the deadline
+	 * @return boolean, true if the deadline exists, false it not
 	 */
-	void assignProfessorToCourse(String professorName, String courseName);
+	boolean hasDeadlineInCourse(String courseName, String deadlineName);
 
 	/**
-	 * Enrolls a student to a given course
-	 * @param studentName - name of the student
-	 * @param courseName - name of the course
+	 * Check if there is at least one test in a course
+	 * @pre !existCourse(courseName)
+	 * @param courseName - the name of the course
+	 * @return boolean, true if it exists, false if not
 	 */
-	void enrolStudentInCourse(String studentName, String courseName);
+	boolean hasTestsCourse(String courseName);
 
-	// not commented yet
-	Iterator<Person> courseIntersectionStudents(Array<String> coursesName);
-
-	// not commented yet
-	Iterator<Person> courseIntersectionProfessors(Array<String> coursesName);
-
-	//not commented
+	/**
+	 * Check if there is at least one deadline in a course
+	 * @pre !existCourse(courseName)
+	 * @param courseName - the name of the course
+	 * @return boolean, true if it exists, false if not
+	 */
 	boolean hasDeadlinesCourse(String courseName);
 
-	//not commented
-	Array<Deadline> getCourseDeadlines(String courseName);
+
+	/*
+	 ****************************************** Iterators & Array's ******************************************
+	 */
+
+	/**
+	 * Gets the list of students in the intersection of multiple courses
+	 * @param coursesName - the name of the courses
+	 * @return Iterator of Person (with Students)
+	 */
+	Iterator<Person> courseIntersectionStudents(Array<String> coursesName);
+
+	/**
+	 * Gets the list of professors in the intersection of multiple courses
+	 * @param coursesName - the name of the courses
+	 * @return Iterator of Person (with Professors)
+	 */
+	Iterator<Person> courseIntersectionProfessors(Array<String> coursesName);
 
 	/**
 	 * Returns all the people registered in the system
@@ -119,20 +185,38 @@ public interface EvaluationsCalendar {
 	 */
 	Iterator<Person> listProfessorsInCourse(String courseName);
 
+	/**
+	 * Returns all the deadlines of a course
+	 * @param courseName - name of the course
+	 * @return Iterator of Deadlines with all the deadlines in a given coure
+	 */
 	Iterator<Deadline> listAllDeadlinesInACourse(String courseName);
 
-	boolean hasDeadlineInCourse(String courseName, String deadlineName);
-
-	void addDeadlineCourse(String courseName, String deadlineName,int year, int month, int day);
-
-	Iterator<Deadline> getPersonalDeadlines(String studentName);
-
-	boolean hasTestsCourse(String courseName);
-
+	/**
+	 * Returns all the tests of a course
+	 * @param courseName - name of the course
+	 * @return Iterator of CourseTests with all the tests in a given course
+	 */
 	Iterator<CourseTests> listAllTestsInACourse(String courseName);
 
+	/**
+	 * Returns all the deadlines of a specific Student
+	 * @param studentName - name of the student
+	 * @return Iterator of Deadlines with all the deadlines of a Student
+	 */
+	Iterator<Deadline> getPersonalDeadlines(String studentName);
+
+	/**
+	 * Returns all the tests of a specific Student
+	 * @param studentName - name of the student
+	 * @return Iterator of Tests with all the deadlines of a Student
+	 */
 	Iterator<CourseTests> getPersonalTests(String personName);
 
-	Person superProfessor();
 
+
+	void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration);
+	int[] checkConflictsOfTest(String courseName,LocalDateTime testDate,int duration);
+	boolean hasTestInSameHourCourse(String courseName,LocalDateTime testDate,int duration);
+	boolean hasTestInCourse(String courseName,String testName);
 }
