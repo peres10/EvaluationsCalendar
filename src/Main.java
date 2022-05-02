@@ -124,9 +124,9 @@ public class Main {
 	}
 	
 	/**
-	 * 
+	 * Returns the command extracted from a string
 	 * @param comm 
-	 * @return
+	 * @return String - commmand extracted from a string
 	 */
 	private static Command getCommand(String comm) {
 		try {
@@ -174,7 +174,7 @@ public class Main {
 		in.close();
 	}
 	
-	/*
+	/**
 	 * Shows the available commands
 	 */
 	private static void helpCommands() {
