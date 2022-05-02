@@ -11,7 +11,9 @@ public class Main {
 	/**
 	 * Feedback dado pelo programa.
 	 */
-	//headers and listing formats
+	/*
+	 * headers and listing formats
+	 */
 	private static final String HEADER_HELP_COMMAND = "Available commands:";
 	private static final String HEADER_PROFESSORS = "Professors:";
 	private static final String HEADER_STUDENTS = "Students:";
@@ -35,7 +37,9 @@ public class Main {
 	private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
 	private static final String LIST_STRESSED_STUDENTS = "%d %s (%d days, %d evaluations)\n";
 	
-	//error and success messages
+	/**
+	 * error and success messages
+	 */
 	private static final String ERROR_UNKNOWN_COMMAND = "Unknown command %s. Type help to see available commands.\n";
 	private static final String ERROR_EMPTY_DATABASE = "No people registered!";
 	private static final String ERROR_ALREADY_EXIST_PERSON = "%s already exists!\n";
@@ -104,11 +108,21 @@ public class Main {
 			return cmdDesc;
 		}
 	}
-
+	
+	
+	/**
+	 * Main program. Calls the command interpreter
+	 * @param args - Arguments to execute the program. Not used in this program
+	 */
 	public static void main(String[] args) {
 		commands();
 	}
-
+	
+	/**
+	 * 
+	 * @param comm 
+	 * @return
+	 */
 	private static Command getCommand(String comm) {
 		try {
 			return Command.valueOf(comm);
@@ -116,7 +130,10 @@ public class Main {
 			return Command.UNKNOWN;
 		}
 	}
-
+	
+	/**
+	 * Command interpreter
+	 */
 	private static void commands(){
 		EvaluationsCalendar evCalendar = new EvaluationsCalendarClass();
 		Scanner in = new Scanner(System.in);
@@ -151,7 +168,10 @@ public class Main {
 		System.out.println(EXIT_MSG);
 		in.close();
 	}
-
+	
+	/*
+	 * Shows the available commands
+	 */
 	private static void helpCommands() {
 		System.out.println(HEADER_HELP_COMMAND);
 		for (Command command : Command.values()) {
@@ -160,7 +180,11 @@ public class Main {
 			System.out.println(command.name().toLowerCase() + " - " + command.description());
 		}
 	}
-
+	
+	/**
+	 * Lists all people
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 */
 	private static void listAllPeople(EvaluationsCalendar evCalendar){
 		Iterator<Person> it = evCalendar.listAllPeople();
 
@@ -180,7 +204,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Adds a new professor
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void addProfessor(EvaluationsCalendar evCalendar,Scanner in){
 		String name=in.nextLine().trim();
 		if(evCalendar.existPerson(name)){
@@ -191,7 +220,12 @@ public class Main {
 			System.out.printf(PERSON_ADDED,name);
 		}
 	}
-
+	
+	/**
+	 * Adds a new student
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void addStudent(EvaluationsCalendar evCalendar,Scanner in){
 		int numStudent=in.nextInt();
 		String name=in.nextLine().trim();
@@ -206,7 +240,11 @@ public class Main {
 			System.out.printf(PERSON_ADDED,name);
 		}
 	}
-
+	
+	/**
+	 * Lists all courses
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 */
 	private static void listAllCourses(EvaluationsCalendar evCalendar) {
 		Courses course;
 		Iterator<Courses> courseIt = evCalendar.listAllCourses();
@@ -222,7 +260,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Adds a new course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void addCourse(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
 		if(evCalendar.existsCourse(courseName))
@@ -232,7 +275,12 @@ public class Main {
 			System.out.printf(COURSE_ADDED, courseName);
 		}
 	}
-
+	
+	/**
+	 * Lists the professors and students of a course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data 
+	 */
 	private static void courseRoster(EvaluationsCalendar evCalendar, Scanner in){
 		String courseName = in.nextLine().trim();
 		Iterator<Person> studentsIT,professorsIT;
@@ -263,7 +311,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Adds a professor to a course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void assignProfessor(EvaluationsCalendar evCalendar, Scanner in) {
 		String professorName = in.nextLine().trim();
 		String courseName = in.nextLine().trim();
@@ -278,7 +331,12 @@ public class Main {
 			System.out.printf(PROFESSOR_ASSIGNED, professorName, courseName);
 		}
 	}
-
+	
+	/**
+	 * Adds students to a course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void enrolStudent(EvaluationsCalendar evCalendar, Scanner in) {
 		int numStudents = in.nextInt();
 		String courseName = in.nextLine().trim();
@@ -317,7 +375,12 @@ public class Main {
 
 		System.out.printf(STUDENTS_ADDED_TO_COURSE, enrolledStudents, courseName);
 	}
-
+	
+	/**
+	 * Lists all the people involved in all the given courses
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void intersection(EvaluationsCalendar evCalendar, Scanner in) {
 		int numCourses = in.nextInt();
 		int i;
@@ -363,7 +426,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Lists all deadlines in a given course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void courseDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
 		Iterator<Deadline> deadlinesIt;
@@ -384,7 +452,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Lists all the deadlines of a given person
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void personalDeadlines(EvaluationsCalendar evCalendar, Scanner in) {
 		String personName = in.nextLine().trim();
 		Iterator<Deadline> deadlinesIT;
@@ -406,7 +479,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Adds a new deadline
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void addDeadline(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName,deadlineName;
 		int year,month,day;
@@ -427,7 +505,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Lists all tests in a given course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void courseTests(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName = in.nextLine().trim();
 		Iterator<CourseTests> testsIT;
@@ -450,6 +533,11 @@ public class Main {
 		}
 	}
 
+	/**
+	 * lists all tests for a given student 
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void personalTests(EvaluationsCalendar evCalendar, Scanner in) {
 		String personName = in.nextLine().trim();
 		Iterator<CourseTests> testsIT;
@@ -472,7 +560,12 @@ public class Main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Add a new test to a course
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void addTest(EvaluationsCalendar evCalendar, Scanner in) {
 		String courseName,testName;
 		int year,month,day,hour,minutes,duration;
@@ -511,7 +604,11 @@ public class Main {
 			System.out.printf(TEST_ADDED_TO_COURSE,conflictState,courseName,testName,year,month,day,hour,minutes,hour+duration,minutes,conflicts[1],conflicts[2]);
 		}
 	}
-
+	
+	/**
+	 * Presents the professor with more students 
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 */
 	private static void superProfessor(EvaluationsCalendar evCalendar) {
 		Person superProfessor = evCalendar.superProfessor();
 
@@ -520,7 +617,12 @@ public class Main {
 		else
 			System.out.printf(LIST_SUPERPROFESSOR, superProfessor.getName(), ((ProfessorClass)superProfessor).getNumberOfStudents());
 	}
-
+	
+	/**
+	 * Presents the students with the top N stressful sequences of evaluations
+	 * @param evCalendar - The Evaluations Calendar we are using
+	 * @param in - The input from where it will read the data
+	 */
 	private static void stressometer(EvaluationsCalendar evCalendar, Scanner in) {
         Iterator<Person> stressedStudentsIT;
         int numberOfStudents = in.nextInt();
