@@ -4,6 +4,8 @@ import dataStructures.*;
 
 /**
  * A Student, that is a Person but also has a student number
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
  */
 public class StudentClass extends PersonClass implements Student {
 	private int studentNum;
@@ -14,6 +16,13 @@ public class StudentClass extends PersonClass implements Student {
 		this.studentNum = studentNum;
 	}
 
+    /*
+     ****************************************** Setters ******************************************
+     */
+    /*
+        Updates consecutiveDaysWithEvaluations and numberOfEvaluationsDuringStress variables
+     */
+    @Override
 	public void studentStressometer() {
 		Iterator<Courses> coursesIT = super.getListOfCoursesInPerson();
         Iterator<CourseTests> testsIT;
@@ -75,24 +84,44 @@ public class StudentClass extends PersonClass implements Student {
         this.numberOfEvaluationsDuringStress = numberOfEvaluationsBackup;
 
     }
+
+
 	/*
 	 ****************************************** Getters ******************************************
 	 */
+
 	/*
 		Gets the student number of a student
 	 */
+    @Override
 	public int getStudentNumber() {
 		return this.studentNum;
 	}
 
+    /*
+        Gets consecutive days with tests
+     */
+    @Override
 	public int getConsecutiveDaysWithTests() {
         return this.consecutiveDaysWithEvaluations;
     }
 
+    /*
+        Gets number of tests during stress
+     */
+    @Override
     public int getNumberOfTestsDuringStress() {
         return this.numberOfEvaluationsDuringStress;
     }
 
+
+    /*
+     ****************************************** Other methods ******************************************
+     */
+
+    /*
+        A compareTo implementation to sort deadlines by consecutive days with evaluations
+     */
 	@Override
 	public int compareTo(Student o) {
 		if(this.consecutiveDaysWithEvaluations > o.getConsecutiveDaysWithTests())

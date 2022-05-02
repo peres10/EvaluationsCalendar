@@ -5,6 +5,8 @@ import java.time.*;
 
 /**
  * A course with Students and Professors assigned to it, also has a list of deadlines and tests
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
  */
 public class CoursesClass implements Courses {
 	private final String courseName;

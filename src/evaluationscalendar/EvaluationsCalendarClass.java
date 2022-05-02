@@ -6,6 +6,8 @@ import java.time.*;
 /**
  * An Evaluation Calendar system that has Persons(Students or Professors), Courses and Deadlines
  * is used to manage the Persons of a course and the deadlines of courses
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
  */
 public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	private Array<Person> people;
@@ -66,18 +68,27 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	/*
 		Adds a deadline to a course
 	 */
+	@Override
 	public void addDeadlineCourse(String courseName,String deadlineName,LocalDate deadlineDate){
 		Courses course = searchCourse(courseName);
 		course.addDeadline(deadlineDate,deadlineName);
 	}
 
+	/*
+		Adds a test to a course
+	 */
+	@Override
+	public void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration) {
+		Courses course = searchCourse(courseName);
+		course.addTest(testDate,duration,testName,courseName);
+	}
 
 	/*
 	 ****************************************** Getters ******************************************
 	 */
 
 	/*
-		Devolve o professor que tem mais alunos
+		Returns the professors with more students
 	 */
 	@Override
 	public Person superProfessor() {
@@ -96,6 +107,27 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return ((ProfessorClass)superProfessor);
 	}
 
+	/*
+		Returns the conflicts of the test, the array returned is supposed to simulate a tuple, the first element
+		is the conflitct text (0 if free,1 if mild and 2 if severe) , the second element is the professors with conflict
+		and the third element is the students with conflict
+	 */
+	@Override
+	public int[] checkConflictsOfTest(String courseName, LocalDateTime testDate, int duration) {
+		int[] resultValues;
+		Courses course = searchCourse(courseName);
+		Array<Courses> allCoursesIntersected=getAllCoursesWithIntersection(course);
+		Array<Courses> allCoursesWithTestInSameDay=getAllCoursesWithTestsInTheSameDay(allCoursesIntersected,testDate);
+
+		if(allCoursesIntersected.size() == 0 || allCoursesWithTestInSameDay.size() == 0){
+			resultValues = new int[]{0, 0, 0};
+			return resultValues;
+		}
+
+		resultValues=checkIfSevere(courseName, allCoursesWithTestInSameDay, testDate, duration);
+		return resultValues;
+	}
+
 
 	/*
 	 ****************************************** Pre-Conditions ******************************************
@@ -109,6 +141,9 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return searchPerson(personName) != null;
 	}
 
+	/*
+		Check if there is a student given its name
+	 */
 	@Override
 	public boolean existStudent(String personName) {
 		if(searchPerson(personName) instanceof Student) 
@@ -197,11 +232,40 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 	/*
 		Check if a deadline with a specific name exists in a course, also given its name
 	 */
+	@Override
 	public boolean hasDeadlineInCourse(String courseName, String deadlineName){
 		Courses course=searchCourse(courseName);
 		return course.hasDeadline(deadlineName);
 	}
 
+	/*
+		Check if two tests intersect
+	 */
+	@Override
+	public boolean hasTestInSameHourCourse(String courseName, LocalDateTime testDate, int duration) {
+		Iterator<CourseTests> testsIT = searchCourse(courseName).getListOfTestsCourse();
+
+		while(testsIT.hasNext()) {
+			CourseTests testB=testsIT.next();
+			LocalDateTime testBDate=testB.getDateHours();
+			if(testDate.isBefore(testB.getTestEnding()) && testBDate.isBefore(testDate.plusHours(duration)))
+				return true;
+		}
+		return false;
+	}
+
+	/*
+		Check if a course has a test given its name
+	 */
+	@Override
+	public boolean hasTestInCourse(String courseName,String testName){
+		Iterator<CourseTests> testsIT = searchCourse(courseName).getListOfTestsCourse();
+		while(testsIT.hasNext()){
+			if(testsIT.next().getName().equals(testName))
+				return true;
+		}
+		return false;
+	}
 
 	/*
 	 ****************************************** Iterators & Array's ******************************************
@@ -334,6 +398,9 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	}
 
+	/*
+		Returns and ordered list of students by its stress
+	 */
 	@Override
 	public Iterator<Person> listStudentsStress() {
 		Iterator<Person> personIT = listAllPeople();
@@ -420,6 +487,9 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return deadlines;
 	}
 
+	/*
+		Sorts and Array of Deadlines Alphabetically
+	 */
 	private Array<CourseTests> sortAlphabeticallyTests(Array<CourseTests> tests) {
 		CourseTests test1, test2, testAux;
 		int j = 0;
@@ -456,53 +526,13 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return tests;
 	}
 
-
-
-
-
-	/*private void getCoursesStudent(Person student) {
-		Iterator<Courses> coursesIT = listAllCourses();
-		Courses course;
-		Array<Deadline> deadlines = new ArrayClass<>();
-		while(coursesIT.hasNext()) {
-			course = coursesIT.next();
-			if(studentInCourse(student.getName(),course.getName()))
-				return;//deadlines.insertLast(getCourseDeadlines(course.getName()));
-		}
-
-	}*/
-
-	public boolean hasTestInSameHourCourse(String courseName, LocalDateTime testDate, int duration) {
-		Iterator<CourseTests> testsIT = searchCourse(courseName).getListOfTestsCourse();
-		
-		while(testsIT.hasNext()) {
-			CourseTests testB=testsIT.next();
-			LocalDateTime testBDate=testB.getDateHours();
-			if(testDate.isBefore(testB.getTestEnding()) && testBDate.isBefore(testDate.plusHours(duration)))
-				return true;
-		}
-		return false;
-	}
-
-	public int[] checkConflictsOfTest(String courseName, LocalDateTime testDate, int duration) {
-		int[] resultValues;
-		Courses course = searchCourse(courseName);
-		Array<Courses> allCoursesIntersected=getAllCoursesWithIntersection(course);
-		Array<Courses> allCoursesWithTestInSameDay=getAllCoursesWithTestsInTheSameDay(allCoursesIntersected,testDate);
-		
-		if(allCoursesIntersected.size() == 0 || allCoursesWithTestInSameDay.size() == 0){
-			resultValues = new int[]{0, 0, 0};
-			return resultValues;
-		}
-
-		resultValues=checkIfSevere(courseName, allCoursesWithTestInSameDay, testDate, duration);
-		return resultValues;
-	}
-
+	/*
+		Gets all the courses that have at least 1 intersection of (students or professors, or both) with a given a course
+	 */
 	private Array<Courses> getAllCoursesWithIntersection(Courses course) {
 		Array<Courses> allCoursesIntersection = new ArrayClass<>();
 		Iterator<Courses> coursesIT = listAllCourses();
-		
+
 		while(coursesIT.hasNext()){
 			Courses courseB = coursesIT.next();
 			Array<Person> personArray = intersectTwoArraysOfPerson(course.getArrayOfStudents(),courseB.getArrayOfStudents());
@@ -520,6 +550,9 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return allCoursesIntersection;
 	}
 
+	/*
+		Gets all the courses that have at least 1 test in a specific date
+	 */
 	private Array<Courses> getAllCoursesWithTestsInTheSameDay(Array<Courses> intersectedCourses, LocalDateTime testDate) {
 		Iterator<Courses> intersectedCoursesIT = intersectedCourses.iterator();
 		Array<Courses> coursesWithTestsInTheSameDay = new ArrayClass<>();
@@ -539,6 +572,10 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return coursesWithTestsInTheSameDay;
 	}
 
+	/*
+		Checks if a test is severe,mild or free, it is an additional function for the fucntion checkConflictsOfTest,
+		returning the same array that is in the description of that function
+	 */
 	private int[] checkIfSevere(String courseName,Array<Courses> courses,LocalDateTime testDate,int duration) {
 		Iterator<Courses> coursesIT = courses.iterator(); 
 		int flag=0;
@@ -581,27 +618,14 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return result;
 	}
 
-	public void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration) {
-		Courses course = searchCourse(courseName);
-		course.addTest(testDate,duration,testName,courseName);
-	}
-
-	public boolean hasTestInCourse(String courseName,String testName){
-		Iterator<CourseTests> testsIT = searchCourse(courseName).getListOfTestsCourse();
-		while(testsIT.hasNext()){
-			if(testsIT.next().getName().equals(testName))
-				return true;
-		}
-		return false;
-	}
-
+	/*
+		Sorts the students by stress
+	 */
 	private Array<Person> sortStressedStudents(Array<Person> students) {
 		Person student;
 		Student student1, student2;
 		int j;
-		boolean fail;
 		for(int i = 0; i < students.size() - 1; i++) {
-			fail = false;
 			j = i + 1 ;
 			do {
 				student1 = (Student) students.get(i);
@@ -624,7 +648,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 							students.insertAt(student, j);
 						}
 						else if(((Person)student1).getNumOfCourses() == ((Person)student2).getNumOfCourses()) { 
-							if(student1.getStudentNumber() > student2.getStudentNumber()) { //THIS IS WRONG
+							if(student1.getStudentNumber() > student2.getStudentNumber()) {
 								student = (Person)student1;
 								students.removeAt(i);
 								students.insertAt((Person)student2, i);

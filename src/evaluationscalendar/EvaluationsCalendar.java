@@ -6,6 +6,8 @@ import java.time.*;
 /**
  * An Evaluation Calendar system that has Persons(Students or Professors), Courses and Deadlines
  * is used to manage the Persons of a course and the deadlines of courses
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
  */
 public interface EvaluationsCalendar {
 
@@ -60,6 +62,26 @@ public interface EvaluationsCalendar {
 	 */
 	void addDeadlineCourse(String courseName,String deadlineName,LocalDate deadlineDate);
 
+	/**
+	 * Returns the conflicts of the test, the array returned is supposed to simulate a tuple, the first element
+	 * 		is a number to represent the conflitct text (0 if free,1 if mild and 2 if severe) , the second element is the professors with conflict
+	 * 		and the third element is the students with conflict
+	 * @param courseName - the name of the course
+	 * @param testDate - the date of the test
+	 * @param duration - the duration of the test
+	 * @return int[] with 3 elements, the first element is a variable to represent the conflict, the second element is the professors with conflit
+	 * 			the third element is the students with conflict
+	 */
+	int[] checkConflictsOfTest(String courseName,LocalDateTime testDate,int duration);
+
+	/**
+	 * Adds a test to a course
+	 * @param courseName - name of the course
+	 * @param testName - name of the test
+	 * @param testDate - date of the test
+	 * @param duration - duration of the test
+	 */
+	void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration);
 
 	/*
 	 ****************************************** Getters ******************************************
@@ -140,6 +162,29 @@ public interface EvaluationsCalendar {
 	 */
 	boolean hasDeadlinesCourse(String courseName);
 
+	/**
+	 * Check if two tests intersect
+	 * @param courseName - the name of the course
+	 * @param testDate - the date of the taste
+	 * @param duration - the duration of the test
+	 * @return boolean, true if there any test at the same time, false if not
+	 */
+	boolean hasTestInSameHourCourse(String courseName,LocalDateTime testDate,int duration);
+
+	/**
+	 * Check if a course has a test given its name
+	 * @param courseName - name of the course
+	 * @param testName - name of the test
+	 * @return true if is exists, false if not
+	 */
+	boolean hasTestInCourse(String courseName,String testName);
+
+	/**
+	 * Check if there is a student given its name
+	 * @param personName - name of the student to search
+	 * @return true if exists, false if not
+	 */
+	boolean existStudent(String personName);
 
 	/*
 	 ****************************************** Iterators & Array's ******************************************
@@ -213,14 +258,11 @@ public interface EvaluationsCalendar {
 	 */
 	Iterator<CourseTests> getPersonalTests(String personName);
 
-
-
-	void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration);
-	int[] checkConflictsOfTest(String courseName,LocalDateTime testDate,int duration);
-	boolean hasTestInSameHourCourse(String courseName,LocalDateTime testDate,int duration);
-	boolean hasTestInCourse(String courseName,String testName);
-
+	/**
+	 * Returns and ordered list of students by its stress
+	 * @return Iterator of Person with the Student
+	 */
 	Iterator<Person> listStudentsStress();
 
-	boolean existStudent(String personName);
+
 }

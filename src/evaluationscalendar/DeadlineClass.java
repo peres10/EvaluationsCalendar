@@ -4,7 +4,9 @@ import java.time.*;
 
 /**
  * A deadline, that has a date , of name of the deadline (per example the name of the project that the deadline refers to)
- *  and also saves the name of the course which the deadline belongs
+ * and also saves the name of the course which the deadline belongs
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
  */
 public class DeadlineClass implements Deadline{
 

@@ -4,6 +4,8 @@ import dataStructures.Iterator;
 
 /**
  * A person that has a name and the number of courses enrolled/assigned in
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
  */
 public interface Person {
 

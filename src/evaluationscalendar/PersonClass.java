@@ -23,6 +23,7 @@ public abstract class PersonClass implements Person {
 	/*
 		Adds a course to the list of courses of a Person
 	 */
+	@Override
 	public void addCourse(Courses course) {
 		this.numCourses++;
 		this.courses.insertLast(course);
@@ -35,6 +36,7 @@ public abstract class PersonClass implements Person {
 	/*
 		Gets number of courses a person is enrolled/assigned in
 	 */
+	@Override
 	public int getNumOfCourses() {
 		return this.numCourses;
 	}
@@ -42,6 +44,7 @@ public abstract class PersonClass implements Person {
 	/*
 		Gets the name of a person
 	 */
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -53,6 +56,7 @@ public abstract class PersonClass implements Person {
 	/*
 		Gets the list of Courses that a person is in
 	 */
+	@Override
 	public Iterator<Courses> getListOfCoursesInPerson() {
 		return this.courses.iterator();
 	}

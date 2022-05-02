@@ -4,7 +4,12 @@ import java.time.*;
 import java.util.Scanner;
 
 import dataStructures.*;
-
+/**
+ * Main program that displays the Evaluations calendar program
+ * @author Tomas Ferreira nº61733
+ * @author Alexandre Peres nº61615
+ * 
+ */
 public class Main {
 
 
@@ -32,7 +37,7 @@ public class Main {
 	private static final String LIST_STUDENT_W_NUMBER = "%d %s\n";
 	private static final String LIST_DEADLINE_COURSE = "%s: %s\n";
 	private static final String LIST_DEADLINE_STUDENT = "[%s] %s: %s\n";
-	private static final String LIST_TEST_COURSE = "%02d-%02d-%02d %02dh%02d-%02dh%02d: %s\n";
+	private static final String LIST_TEST_COURSE = "%s %02dh%02d-%02dh%02d: %s\n";
 	private static final String LIST_TEST_STUDENT = "%s %02dh%02d-%02dh%02d: %s - %s\n";
 	private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
 	private static final String LIST_STRESSED_STUDENTS = "%d %s (%d days, %d evaluations)\n";
@@ -525,7 +530,7 @@ public class Main {
 				System.out.printf(HEADER_TESTS_COURSE, courseName);
 				while(testsIT.hasNext()) {
 					CourseTests test = testsIT.next();
-					System.out.printf(LIST_TEST_COURSE,test.getDateHours().getYear(),test.getDateHours().getMonthValue(),test.getDateHours().getDayOfMonth(),
+					System.out.printf(LIST_TEST_COURSE,test.getDate(),
 							test.getDateHours().getHour(),test.getDateHours().getMinute(),
 							test.getTestEnding().getHour(),test.getTestEnding().getMinute(),test.getName());
 				}
@@ -555,7 +560,7 @@ public class Main {
 				System.out.printf(HEADER_TESTS_STUDENT, personName);
 				while(testsIT.hasNext()) {
 					test = testsIT.next();
-					System.out.printf(LIST_TEST_STUDENT, test.getDate(), test.getHours(), test.getMinutes(), test.getTestEnding().getHour(), test.getTestEnding().getMinute(), test.getTestCourse(), test.getName());
+					System.out.printf(LIST_TEST_STUDENT, test.getDate(), test.getDateHours().getHour(), test.getDateHours().getMinute(), test.getTestEnding().getHour(), test.getTestEnding().getMinute(), test.getTestCourse(), test.getName());
 				}
 			}
 		}
