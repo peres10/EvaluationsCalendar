@@ -109,6 +109,14 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return searchPerson(personName) != null;
 	}
 
+	@Override
+	public boolean existStudent(String personName) {
+		if(searchPerson(personName) instanceof Student) 
+			return true;
+		return false;
+	}
+
+
 	/*
 		Checks if there is any student with the given student number
 	 */
@@ -321,6 +329,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				tests.insertLast(testsIT.next());
 		}
 		tests = tests.sort();
+		sortAlphabeticallyTests(tests);
 		return tests.iterator();
 
 	}
@@ -330,8 +339,8 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		Iterator<Person> personIT = listAllPeople();
 		Person person;
 		Array<Person> students = new ArrayClass<>();
-		Array<Person> sortedStressedStudents;
-		
+		Array<Person> sortedStressedStudents = new ArrayClass<>();
+
 		while(personIT.hasNext()) {
 			person = personIT.next();
 			if(person instanceof Student) {
@@ -339,7 +348,8 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				students.insertLast(person);
 			}
 		}
-		sortedStressedStudents = sortStressedStudents(students);
+		sortedStressedStudents = students.sort();
+		sortedStressedStudents = sortStressedStudents(sortedStressedStudents);
 		return sortedStressedStudents.iterator();
 	}
 
@@ -410,7 +420,41 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return deadlines;
 	}
 
+	private Array<CourseTests> sortAlphabeticallyTests(Array<CourseTests> tests) {
+		CourseTests test1, test2, testAux;
+		int j = 0;
+		boolean fail = false;
+		for(int i = 0; i < tests.size() - 1; i++) {
+			j = i + 1;
+			test1 = tests.get(i);
+			test2 = tests.get(j);
+			if(test1.compareTo(test2) == 0 && test1.getTestCourse().compareTo(test2.getTestCourse()) > 0) {
+				testAux = tests.get(i);
+				tests.removeAt(i);
+				tests.insertAt(test2, i);
+				tests.removeAt(j);
+				tests.insertAt(testAux, j);
+				
+				do {
+					j++;
+					
+					test2 = tests.get(j);
+					if(test1.compareTo(test2) == 0 && test1.getTestCourse().compareTo(test2.getTestCourse()) > 0) {
+						testAux = tests.get(i);
+						tests.removeAt(i);
+						tests.insertAt(test2, i);
+						tests.removeAt(j);
+						tests.insertAt(testAux, j);
+					}else
+						fail = true;
+					
+				}while(!fail);
+				
+			}
+		}
 
+		return tests;
+	}
 
 
 
@@ -428,9 +472,10 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 
 	}*/
 
-	public boolean hasTestInSameHourCourse(String courseName,LocalDateTime testDate,int duration){
+	public boolean hasTestInSameHourCourse(String courseName, LocalDateTime testDate, int duration) {
 		Iterator<CourseTests> testsIT = searchCourse(courseName).getListOfTestsCourse();
-		while(testsIT.hasNext()){
+		
+		while(testsIT.hasNext()) {
 			CourseTests testB=testsIT.next();
 			LocalDateTime testBDate=testB.getDateHours();
 			if(testDate.isBefore(testB.getTestEnding()) && testBDate.isBefore(testDate.plusHours(duration)))
@@ -439,25 +484,27 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return false;
 	}
 
-	public int[] checkConflictsOfTest(String courseName,LocalDateTime testDate,int duration){
+	public int[] checkConflictsOfTest(String courseName, LocalDateTime testDate, int duration) {
 		int[] resultValues;
 		Courses course = searchCourse(courseName);
 		Array<Courses> allCoursesIntersected=getAllCoursesWithIntersection(course);
 		Array<Courses> allCoursesWithTestInSameDay=getAllCoursesWithTestsInTheSameDay(allCoursesIntersected,testDate);
-		if(allCoursesIntersected.size()==0 || allCoursesWithTestInSameDay.size()==0){
+		
+		if(allCoursesIntersected.size() == 0 || allCoursesWithTestInSameDay.size() == 0){
 			resultValues = new int[]{0, 0, 0};
 			return resultValues;
 		}
 
-		resultValues=checkIfSevere(courseName,allCoursesWithTestInSameDay,testDate,duration);
+		resultValues=checkIfSevere(courseName, allCoursesWithTestInSameDay, testDate, duration);
 		return resultValues;
 	}
 
-	private Array<Courses> getAllCoursesWithIntersection(Courses course){
+	private Array<Courses> getAllCoursesWithIntersection(Courses course) {
 		Array<Courses> allCoursesIntersection = new ArrayClass<>();
 		Iterator<Courses> coursesIT = listAllCourses();
+		
 		while(coursesIT.hasNext()){
-			Courses courseB=coursesIT.next();
+			Courses courseB = coursesIT.next();
 			Array<Person> personArray = intersectTwoArraysOfPerson(course.getArrayOfStudents(),courseB.getArrayOfStudents());
 			if(!course.equals(courseB)) {
 				if (personArray.size() > 0)
@@ -473,7 +520,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return allCoursesIntersection;
 	}
 
-	private Array<Courses> getAllCoursesWithTestsInTheSameDay(Array<Courses> intersectedCourses,LocalDateTime testDate){
+	private Array<Courses> getAllCoursesWithTestsInTheSameDay(Array<Courses> intersectedCourses, LocalDateTime testDate) {
 		Iterator<Courses> intersectedCoursesIT = intersectedCourses.iterator();
 		Array<Courses> coursesWithTestsInTheSameDay = new ArrayClass<>();
 
@@ -483,7 +530,7 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 			while(testsIT.hasNext()){
 				CourseTests testB = testsIT.next();
 				LocalDateTime testBDate = testB.getDateHours();
-				if(testBDate.getDayOfYear()==testDate.getDayOfYear() & testBDate.getYear()==testDate.getYear()) {
+				if(testBDate.getDayOfYear() == testDate.getDayOfYear() & testBDate.getYear()==testDate.getYear()) {
 					coursesWithTestsInTheSameDay.insertLast(course);
 					break;
 				}
@@ -492,21 +539,24 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		return coursesWithTestsInTheSameDay;
 	}
 
-	private int[] checkIfSevere(String courseName,Array<Courses> courses,LocalDateTime testDate,int duration){
-		Iterator<Courses> coursesIT = courses.iterator();
+	private int[] checkIfSevere(String courseName,Array<Courses> courses,LocalDateTime testDate,int duration) {
+		Iterator<Courses> coursesIT = courses.iterator(); 
 		int flag=0;
+		Courses courseB;
+		LocalDateTime testBDate = null;
 		Courses courseResult=null;
-		CourseTests resultTest;
+		CourseTests resultTest = null;
+
 
 		while(coursesIT.hasNext()){
-			Courses courseB=coursesIT.next();
+			courseB = coursesIT.next();
 			Iterator<CourseTests> testsIT = courseB.getListOfTestsCourse();
 			while(testsIT.hasNext()){
 				CourseTests testB = testsIT.next();
-				LocalDateTime testBDate = testB.getDateHours();
+				testBDate = testB.getDateHours();
 				LocalDateTime testBDateEnd = testB.getTestEnding();
-				if(flag==0 & testBDate.getDayOfYear()==testDate.getDayOfYear() & testBDate.getYear()==testDate.getYear()) {
-					resultTest=testB;
+				if(flag==0 & testBDate.getDayOfYear() == testDate.getDayOfYear() & testBDate.getYear()==testDate.getYear()) {
+					resultTest = testB;
 					courseResult=courseB;
 					flag=1;
 				}
@@ -518,14 +568,20 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 				}
 			}
 		}
-		int numOfIntersectedStudents = intersectTwoArraysOfPerson(searchCourse(courseName).getArrayOfStudents(),courseResult.getArrayOfStudents()).size();
-		int numOfIntersectedProfessors = intersectTwoArraysOfPerson(searchCourse(courseName).getArrayOfProfessors(),courseResult.getArrayOfProfessors()).size();
-
+		if(testDate.isBefore(resultTest.getDateHours())) {
+			int numOfIntersectedStudents = intersectTwoArraysOfPerson(searchCourse(courseName).getArrayOfStudents(), courseResult.getArrayOfStudents()).size();
+			int numOfIntersectedProfessors = intersectTwoArraysOfPerson(searchCourse(courseName).getArrayOfProfessors(), courseResult.getArrayOfProfessors()).size();
+			
+			int[] result = new int[]{flag,numOfIntersectedProfessors,numOfIntersectedStudents};
+			return result;
+		}
+		int numOfIntersectedStudents = searchCourse(courseName).getNumberOfStudents();
+		int numOfIntersectedProfessors = searchCourse(courseName).getNumberOfProfessors();
 		int[] result = new int[]{flag,numOfIntersectedProfessors,numOfIntersectedStudents};
 		return result;
 	}
 
-	public void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration){
+	public void addTestCourse(String courseName,String testName,LocalDateTime testDate,int duration) {
 		Courses course = searchCourse(courseName);
 		course.addTest(testDate,duration,testName,courseName);
 	}
@@ -538,20 +594,49 @@ public class EvaluationsCalendarClass implements EvaluationsCalendar {
 		}
 		return false;
 	}
-	
+
 	private Array<Person> sortStressedStudents(Array<Person> students) {
-        Person student;
-        for(int i = 0; i <students.size(); i++) {
-            for(int j = 0; i < students.size(); j++) {
-                if(((Student)students.get(i)).getConsecutiveDaysWithTests() < ((Student)students.get(j)).getConsecutiveDaysWithTests()) {
-                    student = students.get(i);
-                    students.removeAt(i);
-                    students.insertAt(students.get(j), i);
-                    students.removeAt(j);
-                    students.insertAt(student, j);
-                }
-            }
-        }
-        return students;
-    }
+		Person student;
+		Student student1, student2;
+		int j;
+		boolean fail;
+		for(int i = 0; i < students.size() - 1; i++) {
+			fail = false;
+			j = i + 1 ;
+			do {
+				student1 = (Student) students.get(i);
+				student2 = (Student) students.get(j);
+				if(student1.getConsecutiveDaysWithTests() == student2.getConsecutiveDaysWithTests()) {
+					
+					if(student1.getNumberOfTestsDuringStress() < student2.getNumberOfTestsDuringStress()) {
+						student = (Person)student1;
+						students.removeAt(i);
+						students.insertAt((Person)student2, i);
+						students.removeAt(j);
+						students.insertAt(student, j);
+					}
+					else if(student1.getNumberOfTestsDuringStress() == student2.getNumberOfTestsDuringStress()) {
+						if(((Person)student1).getNumOfCourses() < ((Person)student2).getNumOfCourses()) {
+							student = (Person)student1;
+							students.removeAt(i);
+							students.insertAt((Person)student2, i);
+							students.removeAt(j);
+							students.insertAt(student, j);
+						}
+						else if(((Person)student1).getNumOfCourses() == ((Person)student2).getNumOfCourses()) { 
+							if(student1.getStudentNumber() > student2.getStudentNumber()) { //THIS IS WRONG
+								student = (Person)student1;
+								students.removeAt(i);
+								students.insertAt((Person)student2, i);
+								students.removeAt(j);
+								students.insertAt(student, j);
+							}
+						}	
+					}
+			}
+			j++;
+			}while(j != students.size());	
+		}
+		return students;
+	}
 }

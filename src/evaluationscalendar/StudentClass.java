@@ -5,64 +5,74 @@ import dataStructures.*;
 /**
  * A Student, that is a Person but also has a student number
  */
-public class StudentClass extends PersonClass implements Student{
+public class StudentClass extends PersonClass implements Student {
 	private int studentNum;
-	private int consecutiveDaysWithTests = 0;
-	private int numberOfTestsDuringStress = 0;
+	private int consecutiveDaysWithEvaluations = 0;
+	private int numberOfEvaluationsDuringStress = 0;
 	public StudentClass(String name,int studentNum) {
 		super(name);
 		this.studentNum = studentNum;
 	}
 
 	public void studentStressometer() {
-        Iterator<Courses> coursesIT = super.getListOfCoursesInPerson();
+		Iterator<Courses> coursesIT = super.getListOfCoursesInPerson();
         Iterator<CourseTests> testsIT;
-        Array<CourseTests> tests = new ArrayClass<>();
-        Array<CourseTests> sortedTests;
+        Iterator<Deadline> deadlinesIT;
+        Array<LocalDate> dates = new ArrayClass<>();
         Courses course;
-        LocalDateTime day1;
-        LocalDateTime day2;
+        LocalDate day1;
+        LocalDate day2;
         int consecutiveDays = 0, consecutiveDaysBackup = 0;
-        int numberOfTests = 0, numberOfTestsBackup = 0;
+        int numberOfEvaluations = 0, numberOfEvaluationsBackup = 0;
 
         while(coursesIT.hasNext()) {
             course = coursesIT.next();
-
+            
             testsIT = course.getListOfTestsCourse();
-
+            deadlinesIT = course.getListOfDeadlinesCourse();
+            
             while(testsIT.hasNext())
-                tests.insertLast(testsIT.next());
+            	dates.insertLast(testsIT.next().getDate());
+         
+            while(deadlinesIT.hasNext())
+            	dates.insertLast(deadlinesIT.next().getDate());
         }
-        sortedTests = tests.sort();
-
-        for(int i = 0; i < sortedTests.size()-1; i++) {
-            day1 = sortedTests.get(i).getDateHours();
-            day2 = sortedTests.get(i+1).getDateHours();
+        
+        dates = dates.sort();
+        
+        if(dates.size() != 0) {
+        	consecutiveDays = 1;
+        	numberOfEvaluations = 1;
+        }
+        	
+        for(int i = 0; i < dates.size()-1; i++) {
+            day1 = dates.get(i);
+            day2 = dates.get(i + 1);
 
             if(day1.equals(day2))
-                numberOfTests++;
+                numberOfEvaluations++;
 
             if(day1.plusDays(1).equals(day2)) {
                 consecutiveDays++;
-                numberOfTests++;
+                numberOfEvaluations++;
             }
             else if(!day1.plusDays(1).equals(day2) && !day1.equals(day2)) {
                 if(consecutiveDays > consecutiveDaysBackup) {
                     consecutiveDaysBackup = consecutiveDays;
-                    numberOfTestsBackup = numberOfTests;
-                    consecutiveDays = 0;
-                    numberOfTests = 0;
+                    numberOfEvaluationsBackup = numberOfEvaluations;
+                    consecutiveDays = 1;
+                    numberOfEvaluations = 1;
                 }
             }
         }
 
         if(consecutiveDays > consecutiveDaysBackup) {
             consecutiveDaysBackup = consecutiveDays;
-            numberOfTestsBackup = numberOfTests;
+            numberOfEvaluationsBackup = numberOfEvaluations;
         }
 
-        this.consecutiveDaysWithTests = consecutiveDaysBackup;
-        this.numberOfTestsDuringStress = numberOfTestsBackup;
+        this.consecutiveDaysWithEvaluations = consecutiveDaysBackup;
+        this.numberOfEvaluationsDuringStress = numberOfEvaluationsBackup;
 
     }
 	/*
@@ -76,10 +86,19 @@ public class StudentClass extends PersonClass implements Student{
 	}
 
 	public int getConsecutiveDaysWithTests() {
-        return this.consecutiveDaysWithTests;
+        return this.consecutiveDaysWithEvaluations;
     }
 
     public int getNumberOfTestsDuringStress() {
-        return this.numberOfTestsDuringStress;
+        return this.numberOfEvaluationsDuringStress;
     }
+
+	@Override
+	public int compareTo(Student o) {
+		if(this.consecutiveDaysWithEvaluations > o.getConsecutiveDaysWithTests())
+			return -1;
+		else if(this.consecutiveDaysWithEvaluations < o.getConsecutiveDaysWithTests())
+			return 1;
+		return 0;
+	}
 }

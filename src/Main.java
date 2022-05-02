@@ -21,9 +21,9 @@ public class Main {
 	private static final String HEADER_INTERSECTION = "Intersection:";
 	private static final String HEADER_DEADLINES_COURSE = "Deadlines for course %s:\n";
 	private static final String HEADER_DEADLINES_STUDENT = "Deadlines for %s:\n";
-	private static final String HEADER_TESTS_COURSE = "Tests for couse %s:\n";
+	private static final String HEADER_TESTS_COURSE = "Tests for course %s:\n";
 	private static final String HEADER_TESTS_STUDENT = "Tests for %s:\n";
-	private static final String HEADER_STRESSOMETER = "Most stresses students:";
+	private static final String HEADER_STRESSOMETER = "Most stressed students:";
 	private static final String LIST_STUDENT_FORMAT = "[%d] %s (%d)\n";
 	private static final String LIST_PROFESSOR_FORMAT = "%s (%d)\n";
 	private static final String LIST_COURSES_FORMAT = "%s: %d professors, %d students, %d tests and %d deadlines.\n";
@@ -31,7 +31,7 @@ public class Main {
 	private static final String LIST_DEADLINE_COURSE = "%s: %s\n";
 	private static final String LIST_DEADLINE_STUDENT = "[%s] %s: %s\n";
 	private static final String LIST_TEST_COURSE = "%02d-%02d-%02d %02dh%02d-%02dh%02d: %s\n";
-	private static final String LIST_TEST_STUDENT = "%s %s-%s: %s - %s\n";
+	private static final String LIST_TEST_STUDENT = "%s %02dh%02d-%02dh%02d: %s - %s\n";
 	private static final String LIST_SUPERPROFESSOR = "%s (%d).\n";
 	private static final String LIST_STRESSED_STUDENTS = "%d %s (%d days, %d evaluations)\n";
 	
@@ -49,7 +49,7 @@ public class Main {
 	private static final String ERROR_PROFESSOR_ALREADY_ASSIGNED = "Professor %s is already assigned to course %s!\n";
 	private static final String ERROR_INADEQUATE_NUM_STUDENTS = "Inadequate number of students!";
 	private static final String ERROR_INADEQUATE_NUM_COURSES = "Inadequate number of courses!";
-	private static final String ERROR_INVALID_NUM_STUDENTS = "Inavlid number of students!\n";
+	private static final String ERROR_INVALID_NUM_STUDENTS = "Invalid number of students!";
 	private static final String ERROR_STUDENT_ALREADY_ENROLLED = "Student %s is already enrolled in course %s!\n";
 	private static final String ERROR_NO_ASSIGN_ENROL = "Course %s has no assigned professors and no enrolled students.\n";
 	private static final String ERROR_NO_ONE_TO_LIST = "No professors or students to list!";
@@ -455,7 +455,8 @@ public class Main {
 		Iterator<CourseTests> testsIT;
 		CourseTests test;
 
-		if(!evCalendar.existPerson(personName))
+		if(!evCalendar.existStudent(personName))
+			
 			System.out.printf(ERROR_STUDENT_NOT_EXIST, personName);
 		else {
 			testsIT = evCalendar.getPersonalTests(personName);
@@ -466,7 +467,7 @@ public class Main {
 				System.out.printf(HEADER_TESTS_STUDENT, personName);
 				while(testsIT.hasNext()) {
 					test = testsIT.next();
-					System.out.printf(LIST_TEST_STUDENT, test.getDateHours(), test.getTestEnding(), test.getTestCourse(), test.getName());
+					System.out.printf(LIST_TEST_STUDENT, test.getDate(), test.getHours(), test.getMinutes(), test.getTestEnding().getHour(), test.getTestEnding().getMinute(), test.getTestCourse(), test.getName());
 				}
 			}
 		}
@@ -507,7 +508,7 @@ public class Main {
 					break;
 			}
 			evCalendar.addTestCourse(courseName,testName,testTime,duration);
-			System.out.printf(TEST_ADDED_TO_COURSE,conflictState,courseName,testName,year,month,day,hour,minutes,hour+duration,minutes,conflicts[1],conflicts[0]);
+			System.out.printf(TEST_ADDED_TO_COURSE,conflictState,courseName,testName,year,month,day,hour,minutes,hour+duration,minutes,conflicts[1],conflicts[2]);
 		}
 	}
 
@@ -537,6 +538,7 @@ public class Main {
                 while(stressedStudentsIT.hasNext() && i < numberOfStudents) {
                     stressedStudent = stressedStudentsIT.next();
                     System.out.printf(LIST_STRESSED_STUDENTS, ((Student)stressedStudent).getStudentNumber(), stressedStudent.getName(), ((Student)stressedStudent).getConsecutiveDaysWithTests(), ((Student)stressedStudent).getNumberOfTestsDuringStress());
+                    i++;
                 }
             }
         }

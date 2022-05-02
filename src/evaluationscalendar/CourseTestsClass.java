@@ -26,7 +26,19 @@ public class CourseTestsClass implements CourseTests{
     public LocalDateTime getDateHours(){
         return dateHours;
     }
-
+    
+    public LocalDate getDate() {
+    	return dateHours.toLocalDate();
+    }
+    
+    public int getHours(){
+        return dateHours.getHour();
+    }
+    
+    public int getMinutes(){
+        return dateHours.getMinute();
+    }
+    
     public String getTestCourse(){
         return courseName;
     }

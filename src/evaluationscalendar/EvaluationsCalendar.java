@@ -221,4 +221,6 @@ public interface EvaluationsCalendar {
 	boolean hasTestInCourse(String courseName,String testName);
 
 	Iterator<Person> listStudentsStress();
+
+	boolean existStudent(String personName);
 }

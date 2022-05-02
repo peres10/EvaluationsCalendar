@@ -46,6 +46,7 @@ public class CoursesClass implements Courses {
 	@Override
 	public void addTest(LocalDateTime testDate,int duration,String testName,String courseName) {
 		this.tests.insertLast(new CourseTestsClass(testDate,duration,testName,courseName));
+		this.tests = this.tests.sort();
 	}
 
 	/*
